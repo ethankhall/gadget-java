@@ -1,0 +1,61 @@
+[versions]
+kotlin = { version = "1.2.51", group = "org.jetbrains.kotlin" }
+jackson = { version = "2.9.6", group = "com.fasterxml.jackson.core" }
+jacksonData = { version = "2.9.6", group = "com.fasterxml.jackson.datatype" }
+jacksonModule = { version = "2.9.6", group = "com.fasterxml.jackson.module" }
+okhttp = { version = "3.11.0", group = "com.squareup.okhttp3" }
+
+[libraries]
+kotlin = ["org.jetbrains.kotlin:kotlin-stdlib", "org.jetbrains.kotlin:kotlin-stdlib-jdk8", "org.jetbrains.kotlin:kotlin-reflect"]
+logging = ["org.slf4j:slf4j-api:1.7.25", "ch.qos.logback:logback-classic:1.2.3"]
+dagger = "com.google.dagger:dagger:2.16"
+okhttp = "com.squareup.okhttp3:okhttp"
+daggerCompiler = "com.google.dagger:dagger-compiler:2.16"
+dropwizard = [
+    "io.dropwizard.metrics:metrics-core:3.1.2",
+    "io.dropwizard:dropwizard-core:1.3.5",
+    "io.dropwizard:dropwizard-auth:1.3.5",
+    "io.dropwizard:dropwizard-jdbi:1.3.5",
+    "io.dropwizard.modules:dropwizard-flyway:1.3.0-4",
+    "io.dropwizard:dropwizard-views-freemarker:1.3.5",
+    "org.hibernate:hibernate-validator:5.4.2.Final"
+]
+database = [
+    "mysql:mysql-connector-java:8.0.11",
+    "com.zaxxer:HikariCP:2.4.1",
+    "org.jooq:jooq:3.11.3",
+    "org.jooq:jooq-meta:3.11.3",
+    "org.flywaydb:flyway-core:4.1.2"
+]
+commonsLang = [
+        "org.apache.commons:commons-lang3:3.7"
+]
+jackson = [
+        "com.fasterxml.jackson.core:jackson-annotations",
+        "com.fasterxml.jackson.core:jackson-databind",
+        "com.fasterxml.jackson.datatype:jackson-datatype-jsr310",
+        "com.fasterxml.jackson.module:jackson-module-kotlin"
+]
+servletCore = [
+        "javax.servlet:javax.servlet-api:3.1.0",
+        "org.glassfish.web:javax.el:2.2.6"
+]
+
+jooqCodeGen = [
+    "org.jooq:jooq:3.11.3",
+    "org.jooq:jooq-meta:3.11.3",
+    "org.jooq:jooq-codegen:3.11.3",
+    "mysql:mysql-connector-java:8.0.11"
+]
+testingLibraries = [
+    "org.mockito:mockito-core:1.10.19",
+    "com.jayway.jsonpath:json-path:2.2.0",
+    "cglib:cglib:3.2.5",
+    "org.objenesis:objenesis:2.2",
+    "org.ow2.asm:asm:5.0.4",
+    "de.sven-jacobs:loremipsum:1.0",
+    "org.jetbrains.kotlin:kotlin-test-junit5:1.2.51",
+    'com.squareup.okhttp3:mockwebserver',
+    'io.dropwizard:dropwizard-testing:1.3.5',
+    'org.hamcrest:hamcrest-library:1.3'
+]

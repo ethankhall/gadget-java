@@ -1,0 +1,40 @@
+plugins {
+    id 'io.ehdev.gradle.dependency-resolve' version 'LATEST' apply false
+    id 'io.ehdev.gradle.build-dir' version 'LATEST' apply false
+    id 'io.ehdev.gradle.klint' version 'LATEST' apply false
+    id "org.flywaydb.flyway" version "5.1.4" apply false
+    id 'org.jetbrains.kotlin.jvm' version '1.2.51' apply false
+    id "org.jetbrains.kotlin.kapt" version "1.2.51" apply false
+    id 'io.ehdev.gradle.dependency-script' version 'LATEST' apply false
+}
+
+apply from: "gradle/database.gradle"
+
+allprojects {
+    group 'io.ehdev'
+    version '1.0-SNAPSHOT'
+
+    apply plugin: 'io.ehdev.gradle.build-dir'
+    apply plugin: 'io.ehdev.gradle.dependency-script'
+    apply plugin: 'java'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        modules {
+            module("org.hibernate:hibernate-validator") {
+                replacedBy("org.hibernate.validator:hibernate-validator",
+                        "org.hibernate is now part of org.hibernate.validator")
+            }
+        }
+
+        testCompile("org.junit.jupiter:junit-jupiter-api:5.2.0")
+        testRuntime("org.junit.jupiter:junit-jupiter-engine:5.2.0")
+    }
+
+    tasks.withType(Test) {
+        useJUnitPlatform()
+    }
+}
