@@ -51,7 +51,8 @@ class GadgetResource(private val redirectManager: RedirectManager) {
     @Produces(MediaType.APPLICATION_JSON)
     fun searchForRedirect(@PathParam("path") requestPath: String): Response {
         val rootPath = URLDecoder.decode(requestPath, Charset.defaultCharset()).split(" ").first()
-        return redirectManager.searchFor(rootPath)
+        val resultsFromSearch = redirectManager.searchFor(rootPath)
+        return Response.ok(mapOf("results" to resultsFromSearch)).build()
     }
 
 }
