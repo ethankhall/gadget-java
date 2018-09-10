@@ -3,7 +3,7 @@ package io.ehdev.gadget.model
 import java.net.URLDecoder
 import java.nio.charset.Charset
 
-class RedirectContainer(private val aliasRoot: String, private val variableNames: List<String>, private val redirect: String) {
+class RedirectContainer(val aliasRoot: String, private val variableNames: List<String>, val redirect: String) {
 
     fun buildRedirect(path: String): String {
         val (variables, extra) = buildVariableMap(path)

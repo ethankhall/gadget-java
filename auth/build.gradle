@@ -2,25 +2,17 @@ plugins {
     id 'java'
     id 'io.ehdev.gradle.development'
     id 'org.jetbrains.kotlin.jvm'
-    id "org.jetbrains.kotlin.kapt"
 }
 
 dependencies {
     compile project(":model")
-    compile deps.libraries.dropwizard
+    compile 'org.springframework:spring-webflux:5.0.8.RELEASE'
+    compile 'com.google.guava:guava:26.0-jre'
     compile deps.libraries.kotlin
     compile deps.libraries.logging
-    compile deps.libraries.dagger
     compile deps.libraries.commonsLang
-    compile 'javax.annotation:javax.annotation-api:1.2'
-    compile deps.libraries.okhttp
+    compile deps.libraries.httpClient
+    compile deps.libraries.jackson
 
     testCompile deps.libraries.testingLibraries
-    testCompile deps.libraries.jackson
-
-    kapt deps.libraries.daggerCompiler
-}
-
-kapt {
-    generateStubs = true
 }

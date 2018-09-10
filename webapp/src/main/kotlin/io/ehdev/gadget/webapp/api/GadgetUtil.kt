@@ -1,7 +1,7 @@
 package io.ehdev.gadget.webapp.api
 
-import io.ehdev.gadget.config.getLogger
 import io.ehdev.gadget.database.manager.api.RedirectManager
+import io.ehdev.gadget.model.getLogger
 import java.net.URLDecoder
 import java.nio.charset.Charset
 

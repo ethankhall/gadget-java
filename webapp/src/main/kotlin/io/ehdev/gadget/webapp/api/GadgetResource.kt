@@ -1,58 +1,43 @@
 package io.ehdev.gadget.webapp.api
 
-import io.dropwizard.auth.Auth
-import io.ehdev.gadget.config.getLogger
 import io.ehdev.gadget.database.manager.api.RedirectManager
-import io.ehdev.gadget.model.AccountManagerPrincipal
+import io.ehdev.gadget.model.getLogger
 import io.ehdev.gadget.webapp.api.model.NewRedirect
-import java.net.URLDecoder
-import java.nio.charset.Charset
-import javax.validation.Valid
-import javax.ws.rs.Consumes
-import javax.ws.rs.GET
-import javax.ws.rs.POST
-import javax.ws.rs.Path
-import javax.ws.rs.PathParam
-import javax.ws.rs.Produces
-import javax.ws.rs.core.Context
-import javax.ws.rs.core.MediaType
-import javax.ws.rs.core.Response
-import javax.ws.rs.core.UriInfo
+import io.ehdev.gadget.webapp.api.model.RedirectResponseModel
+import io.ehdev.gadget.webapp.api.model.SearchResponseModel
+import org.springframework.http.HttpStatus
+import org.springframework.web.reactive.function.server.ServerRequest
+import org.springframework.web.reactive.function.server.ServerResponse
+import reactor.core.publisher.Mono
 
-@Path("/gadget")
 class GadgetResource(private val redirectManager: RedirectManager) {
 
     private val log by getLogger()
 
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    fun createNewEndpoint(@Auth user: AccountManagerPrincipal,
-                          @Context uriInfo: UriInfo,
-                          @Valid redirectDefinition: NewRedirect): Response {
-        redirectManager.setRedirect(redirectDefinition.alias,
-                redirectDefinition.variables ?: emptyList(),
-                redirectDefinition.destination, user.name)
-
-        val redirectPath = uriInfo.baseUriBuilder.path("/gadget/redirect/${redirectDefinition.alias}").build()
-        return Response.temporaryRedirect(redirectPath).build()
+    fun createNewEndpoint(request: ServerRequest): Mono<ServerResponse> {
+        return request.principal().flatMap { user ->
+            when (user) {
+                null -> ServerResponse.status(HttpStatus.UNAUTHORIZED).build()
+                else -> {
+                    request.bodyToMono(NewRedirect::class.java)
+                            .map { redirectDefinition ->
+                                redirectManager.setRedirect(redirectDefinition.alias,
+                                        redirectDefinition.variables ?: emptyList(),
+                                        redirectDefinition.destination, user.name)
+                                request.uriBuilder().replacePath("/gadget/redirect/${redirectDefinition.alias}").build()
+                            }.flatMap { ServerResponse.temporaryRedirect(it).build() }
+                }
+            }
+        }
     }
 
-    @GET
-    @Path("/redirect/{path: (?!gadget).+}")
-    @Produces(MediaType.APPLICATION_JSON)
-    fun getRedirect(@PathParam("path") requestPath: String): Response {
-        val redirectUrl = GadgetUtil.findRequestRedirect(redirectManager, requestPath)
-        redirectUrl ?: return Response.status(Response.Status.NOT_FOUND).build()
-        return Response.ok(mapOf("source" to requestPath, "destination" to redirectUrl)).build()
+    fun searchRedirects(request: ServerRequest): Mono<ServerResponse> {
+        return request.principal().flatMap { user ->
+            user ?: return@flatMap ServerResponse.status(HttpStatus.UNAUTHORIZED).build()
+            val requestPath = request.pathVariable("path")
+            val results = redirectManager.searchFor(requestPath)
+            val response = Mono.just(SearchResponseModel(results.map { RedirectResponseModel(it.aliasRoot, it.redirect) }))
+            ServerResponse.ok().body(response, SearchResponseModel::class.java)
+        }
     }
-
-    @GET
-    @Path("/search/{path: (?!gadget).+}")
-    @Produces(MediaType.APPLICATION_JSON)
-    fun searchForRedirect(@PathParam("path") requestPath: String): Response {
-        val rootPath = URLDecoder.decode(requestPath, Charset.defaultCharset()).split(" ").first()
-        val resultsFromSearch = redirectManager.searchFor(rootPath)
-        return Response.ok(mapOf("results" to resultsFromSearch)).build()
-    }
-
 }

@@ -1,4 +1,4 @@
-package io.ehdev.gadget.config
+package io.ehdev.gadget.model
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

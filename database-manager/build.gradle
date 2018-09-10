@@ -2,24 +2,17 @@ plugins {
     id 'java'
     id 'io.ehdev.gradle.development'
     id 'org.jetbrains.kotlin.jvm'
-    id "org.jetbrains.kotlin.kapt"
 }
 
 dependencies {
     compile project(":database-jooq")
     compile project(":model")
-    compile project(":shared-config")
     compile deps.libraries.kotlin
     compile deps.libraries.logging
     compile deps.libraries.database
-    compile deps.libraries.dagger
     compile deps.libraries.commonsLang
-    compile 'javax.annotation:javax.annotation-api:1.2'
 
-    testCompile deps.libraries.testingLibraries
-
-    kapt deps.libraries.daggerCompiler
-}
+    testCompile deps.libraries.testingLibraries}
 
 integTest.dependsOn ':database-migration:flywayMigrate'
 
@@ -36,8 +29,3 @@ task prepareConfig(type: Copy) {
 }
 
 tasks.integTestClasses.dependsOn(prepareConfig)
-
-
-kapt {
-    generateStubs = true
-}

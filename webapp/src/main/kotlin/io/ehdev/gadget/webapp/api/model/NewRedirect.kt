@@ -2,7 +2,6 @@ package io.ehdev.gadget.webapp.api.model
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import io.dropwizard.validation.ValidationMethod
 import java.net.MalformedURLException
 
 class NewRedirect @JsonCreator constructor(
@@ -10,52 +9,62 @@ class NewRedirect @JsonCreator constructor(
         @JsonProperty("variables", required = false) val variables: List<String>?,
         @JsonProperty("destination", required = true) val destination: String) {
 
-    @ValidationMethod(message = "alias must be between 2 and 128 char's long")
-    fun isAliasInRange() : Boolean {
+    fun validateModel(): ModelValidationModel {
+        val validation = ModelValidationModel()
+        validateAliasDoesNotHaveGadget(validation)
+        validateAliasInRange(validation)
+        validateDestinationInCorrectFormat(validation)
+        validateDestinationInRange(validation)
+        validateDestinationValidUrl(validation)
+        validateVariableListToLong(validation)
+        return validation
+    }
+
+    private fun validateAliasInRange(validation: ModelValidationModel) {
         val length = alias.trim().length
-        return length in 2..128
+        if (length !in 2..128) {
+            validation.addValidationFailure("alias must be between 2 and 128 char's long")
+        }
     }
 
-    @ValidationMethod(message = "destination must be between 5 and 4096 char's long")
-    fun isDestinationInRange() : Boolean {
+    private fun validateDestinationInRange(validation: ModelValidationModel) {
         val length = destination.trim().length
-        return length in 5..4096
+        if (length !in 5..4096) {
+            validation.addValidationFailure("destination must be between 5 and 4096 char's long")
+        }
     }
 
-    @ValidationMethod(message = "alias cannot start with 'gadget'")
-    fun isAliasDoesNotHaveGadget(): Boolean {
-        return !alias.startsWith("gadget", true)
+    private fun validateAliasDoesNotHaveGadget(validation: ModelValidationModel) {
+        if (alias.startsWith("gadget", true)) {
+            validation.addValidationFailure("alias cannot start with 'gadget'")
+        }
     }
 
-    @ValidationMethod(message = "to many variables, joined list can only be 128 characters")
-    fun isVariableListToLong(): Boolean {
-        return (variables ?: emptyList()).joinToString(",").length <= 128
+    private fun validateVariableListToLong(validation: ModelValidationModel) {
+        if ((variables ?: emptyList()).joinToString(",").length > 128) {
+            validation.addValidationFailure("to many variables, joined list can only be 128 characters long")
+        }
     }
 
-    @ValidationMethod(message = "destination is not a valid url")
-    fun isDestinationValidUrl(): Boolean {
-        return try {
+    private fun validateDestinationValidUrl(validation: ModelValidationModel) {
+        try {
             if (!destination.contains("://")) {
                 java.net.URI("http://$destination")
             } else {
                 java.net.URI(destination)
             }
-            true
         } catch (e: MalformedURLException) {
-            false
+            validation.addValidationFailure("destination is not a valid url")
         }
     }
 
-    @ValidationMethod(message = "destination has unknown variables")
-    fun isDestinationInCorrectFormat(): Boolean {
+    private fun validateDestinationInCorrectFormat(validation: ModelValidationModel) {
         val matches = variableMatcher.findAll(destination).map { it.value.drop(1) }
         for (match in matches) {
             if (match !in (variables ?: emptyList())) {
-                return false
+                return validation.addValidationFailure("destination has unknown variables")
             }
         }
-
-        return true
     }
 
 

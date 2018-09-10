@@ -1,10 +1,12 @@
 package io.ehdev.gadget.webapp
 
-import io.dropwizard.Application
-import io.dropwizard.setup.Environment
+import org.springframework.boot.SpringApplication
 
-class GadgetApplication: Application<GadgetConfig>() {
-    override fun run(configuration: GadgetConfig, environment: Environment) {
-
+open class GadgetApplication {
+    companion object {
+        @JvmStatic
+        fun main(args: Array<String>) {
+            SpringApplication.run(MainConfiguration::class.java, *args)
+        }
     }
 }

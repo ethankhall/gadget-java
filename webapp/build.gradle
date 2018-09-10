@@ -3,30 +3,23 @@ plugins {
     id 'org.jetbrains.kotlin.jvm'
     id 'application'
     id "com.github.johnrengelman.shadow" version "2.0.4"
-    id "org.jetbrains.kotlin.kapt"
 }
 
 dependencies {
-    compile project(":auth")
-    compile project(":shared-config")
     compile project(":database-manager")
     compile project(":database-migration")
 
     compile deps.libraries.kotlin
-    compile deps.libraries.dropwizard
-    compile 'javax.validation:validation-api:2.0.1.Final'
-    compile 'org.aspectj:aspectjweaver:1.8.8'
-    compile group: 'javax.activation', name: 'activation', version: '1.1.1'
-    compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.+"
+    compile deps.libraries.jackson
+    compile deps.libraries.spring
 
     testCompile deps.libraries.testingLibraries
-    testCompile 'org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-grizzly2:2.25.1'
-
-    kapt deps.libraries.daggerCompiler
-}
-
-kapt {
-    generateStubs = true
 }
 
 mainClassName = 'io.ehdev.gadget.web.AccountApplication'
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
