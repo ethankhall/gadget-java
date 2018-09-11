@@ -38,4 +38,22 @@ internal class RedirectContainerTest {
         assertEquals("http://bar/flig/foo", redirect.buildRedirect("/foo%20flig"))
         assertEquals("http://bar/flig/foo blarg", redirect.buildRedirect("/foo%20flig%20blarg"))
     }
+
+    @Test
+    fun `will parse out variable`() {
+        var vars = RedirectContainer.extractVariables("https://foo.atlassian.net{/browse/\$1}")
+        assertEquals(1, vars.size)
+        assertEquals("1", vars.first())
+
+        vars = RedirectContainer.extractVariables("http://bar{/\$1/foo{/\$hi}}")
+        assertEquals(2, vars.size)
+        assertEquals("1", vars[0])
+        assertEquals("hi", vars[1])
+    }
+
+    @Test
+    fun `will ignore double $$`() {
+        val vars = RedirectContainer.extractVariables("https://foo.atlassian.net{/browse/\$\$1}")
+        assertEquals(0, vars.size)
+    }
 }

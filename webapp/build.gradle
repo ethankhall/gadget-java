@@ -9,17 +9,27 @@ dependencies {
     compile project(":database-manager")
     compile project(":database-migration")
 
+    compile deps.libraries.logging
+    compile deps.libraries.common
     compile deps.libraries.kotlin
     compile deps.libraries.jackson
     compile deps.libraries.spring
 
+    compile deps.libraries.freemarker
+
+    annotationProcessor deps.libraries.springAnnotation
+
     testCompile deps.libraries.testingLibraries
 }
 
-mainClassName = 'io.ehdev.gadget.web.AccountApplication'
+mainClassName = 'io.ehdev.gadget.webapp.GadgetApplication'
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+}
+
+shadowJar {
+    append 'META-INF/spring.factories'
 }

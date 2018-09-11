@@ -1,0 +1,14 @@
+gadget:
+  authHost: http://localhost:8080
+  defaultLogin: http://localhost:8080/oauth/github
+
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mysql://localhost:3307/gadget?verifyServerCertificate=false&useSSL=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: password
+  flyway.table: flyway_schema_history
+
+server.port: 8081

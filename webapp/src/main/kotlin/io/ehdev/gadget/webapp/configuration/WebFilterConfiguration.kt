@@ -1,5 +1,6 @@
 package io.ehdev.gadget.webapp.configuration
 
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -11,10 +12,11 @@ import org.springframework.web.reactive.result.view.freemarker.FreeMarkerConfigu
 open class WebFilterConfiguration : WebFluxConfigurer {
 
     @Bean
-    open fun freeMarkerConfig(applicationContext: ApplicationContext): FreeMarkerConfigurer {
+    open fun freeMarkerConfig(applicationContext: ApplicationContext,
+                              @Value("\${spring.template.path}") templatePath: String?): FreeMarkerConfigurer {
         val configurer = FreeMarkerConfigurer()
-        configurer.setPreferFileSystemAccess(false)
-        configurer.setTemplateLoaderPath("classpath:/templates/")
+        configurer.setPreferFileSystemAccess(templatePath != null)
+        configurer.setTemplateLoaderPath(templatePath ?: "classpath:/templates/")
         configurer.setResourceLoader(applicationContext)
         return configurer
     }

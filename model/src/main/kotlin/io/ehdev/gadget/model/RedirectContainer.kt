@@ -1,6 +1,7 @@
 package io.ehdev.gadget.model
 
 import java.net.URLDecoder
+import java.net.URLEncoder
 import java.nio.charset.Charset
 
 class RedirectContainer(val aliasRoot: String, private val variableNames: List<String>, val redirect: String) {
@@ -15,7 +16,8 @@ class RedirectContainer(val aliasRoot: String, private val variableNames: List<S
             mergedString = mergedString.replace("\$$key", value)
         }
 
-        mergedString = listOf(mergedString, *extra.toTypedArray()).joinToString(" ")
+        val extraEncoded = extra.map { URLEncoder.encode(it, Charset.defaultCharset()) }.toTypedArray()
+        mergedString = listOf(mergedString, *extraEncoded).joinToString("%20")
 
         return mergedString
     }
@@ -38,5 +40,15 @@ class RedirectContainer(val aliasRoot: String, private val variableNames: List<S
             variableMap[variableName] = name
         }
         return Pair(variableMap, variables.drop(numberOfVariables))
+    }
+
+    companion object {
+        private val variablePattern = Regex("[^$]\\\$(\\w+)")
+        fun extractVariables(path: String): List<String> {
+            val variableParts = path.split("{").drop(1)
+            return variableParts.mapNotNull {
+                variablePattern.find(it)?.groups?.get(1)?.value
+            }
+        }
     }
 }

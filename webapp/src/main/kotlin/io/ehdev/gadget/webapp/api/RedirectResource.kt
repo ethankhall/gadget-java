@@ -7,20 +7,31 @@ import org.springframework.web.reactive.function.server.ServerResponse
 import reactor.core.publisher.Mono
 import java.net.URI
 
-class RedirectResource(private val redirectManager: RedirectManager) {
+interface RedirectResource {
+    fun doRedirect(request: ServerRequest): Mono<ServerResponse>
 
-    fun doRedirect(request: ServerRequest): Mono<ServerResponse> {
-        val requestPath = request.pathVariable("path")
+    fun showRedirectJson(request: ServerRequest): Mono<ServerResponse>
+}
+
+open class DefaultRedirectResource(private val redirectManager: RedirectManager) : RedirectResource {
+
+    override fun doRedirect(request: ServerRequest): Mono<ServerResponse> {
+        val requestPath = request.pathVariable("path").trim('/')
         val redirectUrl = GadgetUtil.findRequestRedirect(redirectManager, requestPath)
 
         return if (redirectUrl == null) {
-            ServerResponse.notFound().build()
+            val searchUri = request.uriBuilder()
+                    .replacePath("/gadget/search")
+                    .replaceQuery("")
+                    .queryParam("searchString", requestPath)
+                    .build()
+            ServerResponse.temporaryRedirect(searchUri).build()
         } else {
             ServerResponse.temporaryRedirect(URI.create(redirectUrl)).build()
         }
     }
 
-    fun showRedirectJson(request: ServerRequest): Mono<ServerResponse> {
+    override fun showRedirectJson(request: ServerRequest): Mono<ServerResponse> {
         val requestPath = request.pathVariable("path")
         val redirectUrl = GadgetUtil.findRequestRedirect(redirectManager, requestPath)
         return if (redirectUrl == null) {

@@ -5,6 +5,7 @@ import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import com.github.tomakehurst.wiremock.stubbing.Scenario
+import io.ehdev.gadget.model.AccountManagerPrincipal
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
@@ -18,16 +19,16 @@ internal class JwtAuthenticatorFilterTest {
         val server = WireMockServer(WireMockConfiguration().dynamicPort())
         server.start()
         server.stubFor(get(urlPathEqualTo("/api/v1/user"))
-                .willReturn(aResponse().withBody("""{ "email": "foo@example.com" }""")))
+                .willReturn(aResponse().withBody("""{ "user": { "email": "foo@example.com" } }""")))
 
         server.start()
         val baseUrl = server.url("/").toString()
 
         val authenticator = JwtAuthenticatorFilter(baseUrl, jacksonObjectMapper())
-        val authenticate = authenticator.resolveCredentials("fooo")
+        val authenticate = authenticator.resolveCredentials("fooo").block() as AccountManagerPrincipal
 
         assertNotNull(authenticate)
-        assertEquals("foo@example.com", authenticate!!.name)
+        assertEquals("foo@example.com", authenticate.name)
         assertEquals("fooo", authenticate.token)
 
         server.stop()
@@ -55,16 +56,16 @@ internal class JwtAuthenticatorFilterTest {
         server.stubFor(get(urlPathEqualTo("/api/v1/user"))
                 .inScenario("Timeout")
                 .whenScenarioStateIs("CALL2")
-                .willReturn(aResponse().withBody("""{ "email": "foo@example.com" }""")))
+                .willReturn(aResponse().withBody("""{ "user": { "email": "foo@example.com" } }""")))
 
         val baseUrl = server.url("/").toString()
 
         val authenticator = JwtAuthenticatorFilter(baseUrl, jacksonObjectMapper())
         for (i in 0..1) {
-            val authenticate = authenticator.resolveCredentials("fooo")
+            val authenticate = authenticator.resolveCredentials("fooo").block() as AccountManagerPrincipal
 
             assertNotNull(authenticate)
-            assertEquals("foo@example.com", authenticate!!.name)
+            assertEquals("foo@example.com", authenticate.name)
             assertEquals("fooo", authenticate.token)
         }
 
@@ -78,16 +79,16 @@ internal class JwtAuthenticatorFilterTest {
         val server = WireMockServer(WireMockConfiguration().dynamicPort())
         server.start()
         server.stubFor(get(urlPathEqualTo("/api/v1/user"))
-                .willReturn(aResponse().withBody("""{ "email": "foo@example.com" }""")))
+                .willReturn(aResponse().withBody("""{ "user": { "email": "foo@example.com" } }""")))
 
         val baseUrl = server.url("/").toString()
 
         val authenticator = JwtAuthenticatorFilter(baseUrl, jacksonObjectMapper())
         for (i in 0..1) {
-            val authenticate = authenticator.resolveCredentials("fooo")
+            val authenticate = authenticator.resolveCredentials("fooo").block() as AccountManagerPrincipal
 
             assertNotNull(authenticate)
-            assertEquals("foo@example.com", authenticate!!.name)
+            assertEquals("foo@example.com", authenticate.name)
             assertEquals("fooo", authenticate.token)
         }
 

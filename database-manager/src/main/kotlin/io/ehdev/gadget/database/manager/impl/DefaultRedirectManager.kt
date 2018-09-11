@@ -1,21 +1,27 @@
 package io.ehdev.gadget.database.manager.impl
 
 import io.ehdev.gadget.database.manager.api.RedirectManager
+import io.ehdev.gadget.database.manager.api.SearchResults
 import io.ehdev.gadget.database.manager.exception.RowChangedInTheBackgroundException
 import io.ehdev.gadget.db.Tables
 import io.ehdev.gadget.model.RedirectContainer
 import org.jooq.DSLContext
 import org.jooq.Record
 import org.jooq.Record2
+import org.jooq.impl.DSL
 import java.time.Clock
 import java.time.Instant
+import java.util.concurrent.CompletionStage
 
 class DefaultRedirectManager(private val context: DSLContext, private val clock: Clock) : RedirectManager {
 
     private fun <T> DSLContext.transactionWithDsl(body: (DSLContext) -> T): T {
-        return this.transactionResult { configuration ->
-            body.invoke(configuration.dsl())
-        }
+        return body.invoke(this)
+    }
+
+    override fun setRedirect(aliasPath: String, destination: String, userName: String) {
+        val variables = RedirectContainer.extractVariables(destination)
+        setRedirect(aliasPath, variables, destination, userName)
     }
 
     override fun setRedirect(aliasPath: String, variables: List<String>, destination: String, userName: String) {
@@ -91,12 +97,14 @@ class DefaultRedirectManager(private val context: DSLContext, private val clock:
                 ))
     }
 
-    override fun getRedirect(aliasPath: String): RedirectContainer? {
-        val row = context.select().from(redirectTable)
+    override fun getRedirect(aliasPath: String): CompletionStage<RedirectContainer?> {
+        return context.select().from(redirectTable)
                 .where(redirectTable.ALIAS.eq(aliasPath))
-                .fetchOne() ?: return null
-
-        return convertToRedirectContainer(row)
+                .fetchAsync()
+                .thenApply { rows ->
+                    val row = rows.firstOrNull() ?: return@thenApply null
+                    convertToRedirectContainer(row)
+                }
     }
 
     private fun convertToRedirectContainer(row: Record): RedirectContainer {
@@ -124,13 +132,25 @@ class DefaultRedirectManager(private val context: DSLContext, private val clock:
         }
     }
 
-    override fun searchFor(rootPath: String): List<RedirectContainer> {
-        val found = context.select(redirectTable.ALIAS, redirectTable.VARIABLES, redirectTable.DESTINATION)
-                .from(redirectTable)
-                .where(redirectTable.ALIAS.like("*$rootPath*"))
-                .fetch()
+    override fun searchFor(rootPath: String, offset: Int, size: Int): CompletionStage<SearchResults> {
+        val whereClause = redirectTable.ALIAS.like("%$rootPath%")
 
-        return found.map { convertToRedirectContainer(it) }
+        val countAsync = context.select(DSL.count())
+                .from(redirectTable)
+                .where(whereClause)
+                .fetchAsync()
+
+        val foundAsync = context.select(redirectTable.ALIAS, redirectTable.VARIABLES, redirectTable.DESTINATION)
+                .from(redirectTable)
+                .where(whereClause)
+                .limit(size)
+                .offset(offset)
+                .fetchAsync()
+
+        return countAsync.thenCombineAsync(foundAsync) { count, found ->
+            val results = found.map { convertToRedirectContainer(it) }
+            SearchResults(count[0].get(DSL.count()), results)
+        }
     }
 
     companion object {
