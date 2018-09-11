@@ -10,7 +10,7 @@ internal class RedirectContainerTest {
         val redirect = RedirectContainer("/foo", emptyList(), "http://bar")
 
         assertEquals("http://bar", redirect.buildRedirect("/foo"))
-        assertEquals("http://bar flig", redirect.buildRedirect("/foo%20flig"))
+        assertEquals("http://bar%20flig", redirect.buildRedirect("/foo%20flig"))
     }
 
     @Test
@@ -36,7 +36,7 @@ internal class RedirectContainerTest {
 
         assertEquals("http://bar", redirect.buildRedirect("/foo"))
         assertEquals("http://bar/flig/foo", redirect.buildRedirect("/foo%20flig"))
-        assertEquals("http://bar/flig/foo blarg", redirect.buildRedirect("/foo%20flig%20blarg"))
+        assertEquals("http://bar/flig/foo%20blarg", redirect.buildRedirect("/foo%20flig%20blarg"))
     }
 
     @Test
