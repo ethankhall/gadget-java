@@ -18,7 +18,7 @@
         <!-- Main jumbotron for a primary marketing message or call to action -->
         <div class="jumbotron">
             <div class="container">
-                <h1 class="display-3">Searching for ${searchString}...</h1>
+                <h1 class="display-3">Searching for `${searchString}`</h1>
                 <form action="/gadget/new">
                     <input type="hidden" name="name" value="${searchString}">
                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Add/update redirect for ${searchString}</button>

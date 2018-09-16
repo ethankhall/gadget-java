@@ -18,6 +18,5 @@ object GadgetUtil {
                 .thenApply { it?.buildRedirect(requestPath) }
                 .toCompletableFuture()
                 .get()
-
     }
 }

@@ -70,18 +70,14 @@ internal class GadgetHtmlResourceTest {
         Mockito.`when`(redirectManager.getRedirect("foo/bar")).thenReturn(redirect)
         Mockito.`when`(redirectManager.getRedirect("foo")).thenReturn(CompletableFuture.supplyAsync { null })
         val request = Mockito.mock(ServerRequest::class.java)
-        Mockito.`when`(request.pathVariable("path")).thenReturn("foo/bar", "foo")
+        Mockito.`when`(request.pathVariable("path")).thenReturn("foo/bar")
 
 
-        var response = redirectResource.doRedirect(request).block()!!
+        val response = redirectResource.doRedirect(request).block()!!
         Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.TEMPORARY_REDIRECT)
         Assertions.assertThat(response.headers().location!!.toString()).isEqualTo("http://bar.com/")
 
-        response = redirectResource.doRedirect(request).block()!!
-        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND)
-
         Mockito.verify(redirectManager, times(1)).getRedirect("foo/bar")
-        Mockito.verify(redirectManager, times(1)).getRedirect("foo")
         Mockito.verifyNoMoreInteractions(redirectManager)
     }
 

@@ -5,9 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.net.MalformedURLException
 
 class NewRedirect @JsonCreator constructor(
-        @JsonProperty("alias", required = true) val alias: String,
-        @JsonProperty("variables", required = false) val variables: List<String>?,
-        @JsonProperty("destination", required = true) val destination: String) {
+    @JsonProperty("alias", required = true) val alias: String,
+    @JsonProperty("variables", required = false) val variables: List<String>?,
+    @JsonProperty("destination", required = true) val destination: String
+) {
 
     fun validateModel(): ModelValidationModel {
         val validation = ModelValidationModel()
@@ -66,7 +67,6 @@ class NewRedirect @JsonCreator constructor(
             }
         }
     }
-
 
     companion object {
         private val variableMatcher = Regex("\$[a-zA-Z0-9_-]+")

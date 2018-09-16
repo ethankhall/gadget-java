@@ -9,7 +9,12 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
-import org.springframework.web.reactive.function.server.*
+import org.springframework.web.reactive.function.server.HandlerStrategies
+import org.springframework.web.reactive.function.server.RouterFunction
+import org.springframework.web.reactive.function.server.RouterFunctions
+import org.springframework.web.reactive.function.server.ServerRequest
+import org.springframework.web.reactive.function.server.ServerResponse
+import org.springframework.web.reactive.function.server.router
 import org.springframework.web.server.WebHandler
 import org.springframework.web.util.UriComponentsBuilder
 import reactor.core.publisher.Mono
@@ -22,10 +27,12 @@ open class RoutingConfiguration {
     open fun webHandler(router: RouterFunction<ServerResponse>): WebHandler = RouterFunctions.toWebHandler(router, HandlerStrategies.withDefaults())
 
     @Bean
-    open fun mainServer(applicationConfig: ApplicationConfig,
-                        redirectResource: RedirectResource,
-                        gadgetJsonResource: GadgetJsonResource,
-                        gadgetHtmlResource: GadgetHtmlResource): RouterFunction<ServerResponse> {
+    open fun mainServer(
+        applicationConfig: ApplicationConfig,
+        redirectResource: RedirectResource,
+        gadgetJsonResource: GadgetJsonResource,
+        gadgetHtmlResource: GadgetHtmlResource
+    ): RouterFunction<ServerResponse> {
 
         return router {
             accept(MediaType.TEXT_HTML).nest {

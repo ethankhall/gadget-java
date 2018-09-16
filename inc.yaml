@@ -1,8 +1,6 @@
 exec:
-  ci:
-    commands:
-      - ./gradlew assemble
-      - ./gradlew test
+  pull-deps:
+    commands: ./gradlew resolveDependencies
 
   build:
     commands: ./gradlew build

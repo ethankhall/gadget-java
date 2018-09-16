@@ -20,10 +20,10 @@ import java.security.Principal
 import java.time.Duration
 import java.util.concurrent.TimeUnit
 
-
 class JwtAuthenticatorFilter(
-        accountManagerHost: String,
-        private val om: ObjectMapper) : WebFilter {
+    accountManagerHost: String,
+    private val om: ObjectMapper
+) : WebFilter {
 
     private val log by lazyLogger()
 

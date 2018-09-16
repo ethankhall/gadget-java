@@ -2,7 +2,7 @@
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
     <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Gadget</a>
     <ul class="navbar-nav mr-auto"></ul>
-    <form class="form-inline my-2 my-lg-0" action="gadget/search">
+    <form class="form-inline my-2 my-lg-0" action="/gadget/search">
         <input class="form-control mr-sm-2" placeholder="Search" aria-label="Search" type="text" name="searchString">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
     </form>

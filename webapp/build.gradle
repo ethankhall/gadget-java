@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.jvm'
     id 'application'
     id "com.github.johnrengelman.shadow" version "2.0.4"
+    id 'com.google.cloud.tools.jib' version '0.9.10'
 }
 
 dependencies {
@@ -33,3 +34,5 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
 shadowJar {
     append 'META-INF/spring.factories'
 }
+
+jib.to.image = 'gcr.io/account-manager-216313/gadget-app'

@@ -3,7 +3,12 @@ package io.ehdev.gadget.webapp.configuration
 import io.ehdev.gadget.database.manager.api.RedirectManager
 import io.ehdev.gadget.database.manager.impl.DefaultRedirectManager
 import io.ehdev.gadget.webapp.aop.LogHttpRequestAspect
-import io.ehdev.gadget.webapp.api.*
+import io.ehdev.gadget.webapp.api.DefaultGadgetHtmlResource
+import io.ehdev.gadget.webapp.api.DefaultGadgetJsonResource
+import io.ehdev.gadget.webapp.api.DefaultRedirectResource
+import io.ehdev.gadget.webapp.api.GadgetHtmlResource
+import io.ehdev.gadget.webapp.api.GadgetJsonResource
+import io.ehdev.gadget.webapp.api.RedirectResource
 import org.jooq.DSLContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -33,5 +38,4 @@ open class BusinessLogicConfiguration {
 
     @Bean
     open fun requestRequestAspect() = LogHttpRequestAspect()
-
 }

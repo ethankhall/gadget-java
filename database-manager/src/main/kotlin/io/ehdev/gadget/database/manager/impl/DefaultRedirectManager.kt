@@ -157,5 +157,4 @@ class DefaultRedirectManager(private val context: DSLContext, private val clock:
         private val redirectTable = Tables.REDIRECT
         private val historyTable = Tables.REDIRECT_HISTORY
     }
-
 }
