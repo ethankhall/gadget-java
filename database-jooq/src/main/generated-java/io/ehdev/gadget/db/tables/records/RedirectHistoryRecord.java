@@ -21,8 +21,8 @@ import javax.validation.constraints.Size;
 
 import org.jooq.Field;
 import org.jooq.Record1;
-import org.jooq.Record7;
-import org.jooq.Row7;
+import org.jooq.Record6;
+import org.jooq.Row6;
 import org.jooq.impl.UpdatableRecordImpl;
 
 
@@ -41,9 +41,9 @@ import org.jooq.impl.UpdatableRecordImpl;
 @Table(name = "redirect_history", schema = "gadget", indexes = {
     @Index(name = "PRIMARY", unique = true, columnList = "redirect_history_id ASC")
 })
-public class RedirectHistoryRecord extends UpdatableRecordImpl<RedirectHistoryRecord> implements Record7<Long, String, String, String, String, Instant, Instant> {
+public class RedirectHistoryRecord extends UpdatableRecordImpl<RedirectHistoryRecord> implements Record6<Long, String, String, String, String, Instant> {
 
-    private static final long serialVersionUID = -452463883;
+    private static final long serialVersionUID = 191047060;
 
     /**
      * Setter for <code>gadget.redirect_history.redirect_history_id</code>.
@@ -130,26 +130,10 @@ public class RedirectHistoryRecord extends UpdatableRecordImpl<RedirectHistoryRe
     }
 
     /**
-     * Setter for <code>gadget.redirect_history.created_at</code>.
-     */
-    public void setCreatedAt(Instant value) {
-        set(5, value);
-    }
-
-    /**
-     * Getter for <code>gadget.redirect_history.created_at</code>.
-     */
-    @Column(name = "created_at", nullable = false)
-    @NotNull
-    public Instant getCreatedAt() {
-        return (Instant) get(5);
-    }
-
-    /**
      * Setter for <code>gadget.redirect_history.deleted_at</code>.
      */
     public void setDeletedAt(Instant value) {
-        set(6, value);
+        set(5, value);
     }
 
     /**
@@ -158,7 +142,7 @@ public class RedirectHistoryRecord extends UpdatableRecordImpl<RedirectHistoryRe
     @Column(name = "deleted_at", nullable = false)
     @NotNull
     public Instant getDeletedAt() {
-        return (Instant) get(6);
+        return (Instant) get(5);
     }
 
     // -------------------------------------------------------------------------
@@ -174,23 +158,23 @@ public class RedirectHistoryRecord extends UpdatableRecordImpl<RedirectHistoryRe
     }
 
     // -------------------------------------------------------------------------
-    // Record7 type implementation
+    // Record6 type implementation
     // -------------------------------------------------------------------------
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Row7<Long, String, String, String, String, Instant, Instant> fieldsRow() {
-        return (Row7) super.fieldsRow();
+    public Row6<Long, String, String, String, String, Instant> fieldsRow() {
+        return (Row6) super.fieldsRow();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Row7<Long, String, String, String, String, Instant, Instant> valuesRow() {
-        return (Row7) super.valuesRow();
+    public Row6<Long, String, String, String, String, Instant> valuesRow() {
+        return (Row6) super.valuesRow();
     }
 
     /**
@@ -238,14 +222,6 @@ public class RedirectHistoryRecord extends UpdatableRecordImpl<RedirectHistoryRe
      */
     @Override
     public Field<Instant> field6() {
-        return RedirectHistoryTable.REDIRECT_HISTORY.CREATED_AT;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Field<Instant> field7() {
         return RedirectHistoryTable.REDIRECT_HISTORY.DELETED_AT;
     }
 
@@ -294,14 +270,6 @@ public class RedirectHistoryRecord extends UpdatableRecordImpl<RedirectHistoryRe
      */
     @Override
     public Instant component6() {
-        return getCreatedAt();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Instant component7() {
         return getDeletedAt();
     }
 
@@ -350,14 +318,6 @@ public class RedirectHistoryRecord extends UpdatableRecordImpl<RedirectHistoryRe
      */
     @Override
     public Instant value6() {
-        return getCreatedAt();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Instant value7() {
         return getDeletedAt();
     }
 
@@ -411,15 +371,6 @@ public class RedirectHistoryRecord extends UpdatableRecordImpl<RedirectHistoryRe
      */
     @Override
     public RedirectHistoryRecord value6(Instant value) {
-        setCreatedAt(value);
-        return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public RedirectHistoryRecord value7(Instant value) {
         setDeletedAt(value);
         return this;
     }
@@ -428,14 +379,13 @@ public class RedirectHistoryRecord extends UpdatableRecordImpl<RedirectHistoryRe
      * {@inheritDoc}
      */
     @Override
-    public RedirectHistoryRecord values(Long value1, String value2, String value3, String value4, String value5, Instant value6, Instant value7) {
+    public RedirectHistoryRecord values(Long value1, String value2, String value3, String value4, String value5, Instant value6) {
         value1(value1);
         value2(value2);
         value3(value3);
         value4(value4);
         value5(value5);
         value6(value6);
-        value7(value7);
         return this;
     }
 
@@ -453,7 +403,7 @@ public class RedirectHistoryRecord extends UpdatableRecordImpl<RedirectHistoryRe
     /**
      * Create a detached, initialised RedirectHistoryRecord
      */
-    public RedirectHistoryRecord(Long redirectHistoryId, String alias, String variables, String destination, String user, Instant createdAt, Instant deletedAt) {
+    public RedirectHistoryRecord(Long redirectHistoryId, String alias, String variables, String destination, String user, Instant deletedAt) {
         super(RedirectHistoryTable.REDIRECT_HISTORY);
 
         set(0, redirectHistoryId);
@@ -461,7 +411,6 @@ public class RedirectHistoryRecord extends UpdatableRecordImpl<RedirectHistoryRe
         set(2, variables);
         set(3, destination);
         set(4, user);
-        set(5, createdAt);
-        set(6, deletedAt);
+        set(5, deletedAt);
     }
 }

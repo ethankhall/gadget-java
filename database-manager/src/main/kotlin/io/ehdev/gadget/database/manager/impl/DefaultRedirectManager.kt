@@ -90,7 +90,6 @@ class DefaultRedirectManager(private val context: DSLContext, private val clock:
                 .set(mapOf(
                         historyTable.ALIAS to previousRow.get(redirectTable.ALIAS),
                         historyTable.VARIABLES to previousRow.get(redirectTable.VARIABLES),
-                        historyTable.CREATED_AT to previousRow.get(redirectTable.CREATED_AT),
                         historyTable.USER to previousRow.get(redirectTable.USER),
                         historyTable.DESTINATION to previousRow.get(redirectTable.DESTINATION),
                         historyTable.DELETED_AT to now

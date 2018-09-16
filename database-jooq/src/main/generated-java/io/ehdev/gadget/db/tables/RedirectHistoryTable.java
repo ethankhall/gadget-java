@@ -43,7 +43,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class RedirectHistoryTable extends TableImpl<RedirectHistoryRecord> {
 
-    private static final long serialVersionUID = -1661463353;
+    private static final long serialVersionUID = -1794928869;
 
     /**
      * The reference instance of <code>gadget.redirect_history</code>
@@ -82,11 +82,6 @@ public class RedirectHistoryTable extends TableImpl<RedirectHistoryRecord> {
      * The column <code>gadget.redirect_history.user</code>.
      */
     public final TableField<RedirectHistoryRecord, String> USER = createField("user", org.jooq.impl.SQLDataType.VARCHAR(256).nullable(false), this, "");
-
-    /**
-     * The column <code>gadget.redirect_history.created_at</code>.
-     */
-    public final TableField<RedirectHistoryRecord, Instant> CREATED_AT = createField("created_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "", new TimestampConverter());
 
     /**
      * The column <code>gadget.redirect_history.deleted_at</code>.

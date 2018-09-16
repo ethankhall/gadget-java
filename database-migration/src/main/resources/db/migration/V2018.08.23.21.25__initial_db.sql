@@ -14,6 +14,5 @@ CREATE TABLE redirect_history (
   variables           VARCHAR(256),
   destination         VARCHAR(4096) NOT NULL,
   user                VARCHAR(256)  NOT NULL,
-  created_at          TIMESTAMP(6)  NOT NULL,
   deleted_at          TIMESTAMP(6)  NOT NULL
 );

@@ -36,14 +36,13 @@ import javax.validation.constraints.Size;
 })
 public class RedirectHistory implements Serializable {
 
-    private static final long serialVersionUID = -1776991367;
+    private static final long serialVersionUID = -208941676;
 
     private Long    redirectHistoryId;
     private String  alias;
     private String  variables;
     private String  destination;
     private String  user;
-    private Instant createdAt;
     private Instant deletedAt;
 
     public RedirectHistory() {}
@@ -54,7 +53,6 @@ public class RedirectHistory implements Serializable {
         this.variables = value.variables;
         this.destination = value.destination;
         this.user = value.user;
-        this.createdAt = value.createdAt;
         this.deletedAt = value.deletedAt;
     }
 
@@ -64,7 +62,6 @@ public class RedirectHistory implements Serializable {
         String  variables,
         String  destination,
         String  user,
-        Instant createdAt,
         Instant deletedAt
     ) {
         this.redirectHistoryId = redirectHistoryId;
@@ -72,7 +69,6 @@ public class RedirectHistory implements Serializable {
         this.variables = variables;
         this.destination = destination;
         this.user = user;
-        this.createdAt = createdAt;
         this.deletedAt = deletedAt;
     }
 
@@ -130,16 +126,6 @@ public class RedirectHistory implements Serializable {
         this.user = user;
     }
 
-    @Column(name = "created_at", nullable = false)
-    @NotNull
-    public Instant getCreatedAt() {
-        return this.createdAt;
-    }
-
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
-
     @Column(name = "deleted_at", nullable = false)
     @NotNull
     public Instant getDeletedAt() {
@@ -159,7 +145,6 @@ public class RedirectHistory implements Serializable {
         sb.append(", ").append(variables);
         sb.append(", ").append(destination);
         sb.append(", ").append(user);
-        sb.append(", ").append(createdAt);
         sb.append(", ").append(deletedAt);
 
         sb.append(")");
