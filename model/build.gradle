@@ -9,6 +9,7 @@ dependencies {
     compile deps.libraries.kotlin
     compile deps.libraries.logging
     compile deps.libraries.commonsLang
+    compile deps.libraries.codec
 
     testCompile deps.libraries.testingLibraries
 }

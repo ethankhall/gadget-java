@@ -1,10 +1,10 @@
 package io.ehdev.gadget.model
 
-import java.net.URLDecoder
-import java.net.URLEncoder
-import java.nio.charset.Charset
+import org.apache.commons.codec.net.URLCodec
 
 class RedirectContainer(val aliasRoot: String, private val variableNames: List<String>, val redirect: String) {
+
+    private val codec = URLCodec()
 
     fun buildRedirect(path: String): String {
         val (variables, extra) = buildVariableMap(path)
@@ -16,14 +16,14 @@ class RedirectContainer(val aliasRoot: String, private val variableNames: List<S
             mergedString = mergedString.replace("\$$key", value)
         }
 
-        val extraEncoded = extra.map { URLEncoder.encode(it, Charset.defaultCharset()) }.toTypedArray()
+        val extraEncoded = extra.map { codec.encode(it) }.toTypedArray()
         mergedString = listOf(mergedString, *extraEncoded).joinToString("%20")
 
         return mergedString
     }
 
     private fun buildVariableMap(path: String): Pair<Map<String, String>, List<String>> {
-        val decoded = URLDecoder.decode(path, Charset.defaultCharset()).trim()
+        val decoded = codec.decode(path).trim()
         val variables = decoded.split(" ").drop(1)
 
         val variableMap = mutableMapOf<String, String>()
