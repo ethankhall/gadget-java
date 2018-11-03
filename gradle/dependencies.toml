@@ -38,7 +38,8 @@ spring = [
     'org.springframework.boot:spring-boot-autoconfigure',
     'org.springframework.boot:spring-boot-starter',
     'org.springframework.boot:spring-boot-starter-aop',
-    'org.springframework.boot:spring-boot-actuator'
+    'org.springframework.boot:spring-boot-actuator',
+    'org.springframework.boot:spring-boot-starter-actuator'
 ]
 
 httpClient = [

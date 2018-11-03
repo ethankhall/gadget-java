@@ -5,6 +5,8 @@ import io.ehdev.gadget.webapp.api.GadgetHtmlResource
 import io.ehdev.gadget.webapp.api.GadgetJsonResource
 import io.ehdev.gadget.webapp.api.RedirectResource
 import io.ehdev.gadget.webapp.auth.JwtAuthenticatorFilter
+import org.springframework.boot.actuate.health.Health
+import org.springframework.boot.actuate.health.HealthEndpoint
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
@@ -20,7 +22,7 @@ import org.springframework.web.util.UriComponentsBuilder
 import reactor.core.publisher.Mono
 
 @Configuration
-@Import(BusinessLogicConfiguration::class, WebFilterConfiguration::class)
+@Import(BusinessLogicConfiguration::class, WebFilterConfiguration::class, MetricsConfiguration::class)
 open class RoutingConfiguration {
 
     @Bean
@@ -31,7 +33,8 @@ open class RoutingConfiguration {
         applicationConfig: ApplicationConfig,
         redirectResource: RedirectResource,
         gadgetJsonResource: GadgetJsonResource,
-        gadgetHtmlResource: GadgetHtmlResource
+        gadgetHtmlResource: GadgetHtmlResource,
+        healthEndpoint: HealthEndpoint
     ): RouterFunction<ServerResponse> {
 
         return router {
@@ -46,6 +49,8 @@ open class RoutingConfiguration {
                     GET("/search", gadgetHtmlResource::searchFor)
                     GET("/new", gadgetHtmlResource::displayUpdatePage)
                     POST("/new", gadgetHtmlResource::updateRedirect)
+                    (GET("/actuator/health") or HEAD("/actuator/health"))
+                            .invoke { ServerResponse.ok().body(Mono.just(healthEndpoint.health()), Health::class.java) }
                 }
 
                 GET("/{*path}", redirectResource::doRedirect)
@@ -55,11 +60,13 @@ open class RoutingConfiguration {
                     POST("/", gadgetJsonResource::createNewEndpoint)
                     GET("/resource/{path}", redirectResource::showRedirectJson)
                     GET("/search", gadgetJsonResource::searchRedirects)
+                    (GET("/actuator/health") or HEAD("/actuator/health"))
+                            .invoke { ServerResponse.ok().body(Mono.just(healthEndpoint.health()), Health::class.java) }
                 }
                 GET("/{*path}", redirectResource::showRedirectJson)
             }
         }.filter { request, next ->
-            if (request.path().startsWith("/gadget")) {
+            if (request.path().startsWith("/gadget") && !request.path().startsWith("/gadget/actuator")) {
                 request.principal()
                         .flatMap { next.handle(request) }
                         .switchIfEmpty(redirectToLogin(request, applicationConfig))
