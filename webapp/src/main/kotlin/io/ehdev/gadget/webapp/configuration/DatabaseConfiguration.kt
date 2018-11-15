@@ -11,7 +11,7 @@ import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy
 import javax.sql.DataSource
 
 @Configuration
-@Import(MetricsConfiguration::class, DataSourceAutoConfiguration::class)
+@Import(DataSourceAutoConfiguration::class)
 open class DatabaseConfiguration {
 
     @Bean
