@@ -29,7 +29,7 @@ steps:
 
   - task: CopyFiles@2
     inputs:
-      sourceFolder: /build/webapp/gadget-release
+      sourceFolder: build/webapp/gadget-release
       targetFolder: $(Build.ArtifactStagingDirectory)
 
   - task: PublishBuildArtifacts@1
