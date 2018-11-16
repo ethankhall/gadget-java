@@ -31,6 +31,6 @@ steps:
 
   - script: |
       GCR_PW="$(echo $GCP_SERVICE_TOKEN | base64 -d)"
-      ./gradlew jib -Djib.to.auth.password=$GCR_PW
+      ./gradlew jib --stacktrace --info -Djib.to.auth.password=$GCR_PW
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
 

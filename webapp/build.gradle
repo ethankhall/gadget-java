@@ -38,9 +38,6 @@ jib {
             username = '_json_key'
         }
     }
-    container {
-        ports = [ '8080' ]
-    }
 }
 
 task copyDistForRelease(type: Copy, dependsOn: 'distZip') {
