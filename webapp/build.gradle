@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'org.jetbrains.kotlin.jvm'
     id 'application'
-    id 'com.google.cloud.tools.jib' version '0.9.10'
+    id 'com.google.cloud.tools.jib' version '0.10.0'
 }
 
 dependencies {
@@ -30,7 +30,18 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
     }
 }
 
-jib.to.image = 'gcr.io/account-manager-216313/gadget-app'
+jib {
+    to {
+        image = 'gcr.io/account-manager-216313/gadget-app'
+        tags = [version.toString(), 'latest']
+        auth {
+            username = '_json_key'
+        }
+    }
+    container {
+        ports = [ '8080' ]
+    }
+}
 
 task copyDistForRelease(type: Copy, dependsOn: 'distZip') {
   from distZip.archivePath
