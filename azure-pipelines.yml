@@ -30,7 +30,15 @@ steps:
       artifactName: gadget.zip
 
   - script: |
-      GCR_PW="$(echo $GCP_SERVICE_TOKEN | base64 -d)"
-      ./gradlew jib --stacktrace --info -Djib.to.auth.password=$GCR_PW
+      export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)"
+      echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list"
+      curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+      sudo apt-get update && sudo apt-get install google-cloud-sdk
+
+      echo $GCP_SERVICE_TOKEN | base64 -d  > ${HOME}/gcloud-service-key.json
+      gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
+      gcloud --quiet config set project ${GCP_PROJECT_ID}
+
+      ./gradlew jib --stacktrace --info -Djib.to.auth.username="oauth2accesstoken" -Djib.to.auth.password="$(gcloud auth print-access-token)"
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
 
