@@ -6,7 +6,15 @@
 pool:
   vmImage: 'ubuntu-16.04'
 
-trigger: ['master']
+trigger:
+  branches:
+    include:
+      - master
+  paths:
+    exclude:
+      - README.md
+      - docs
+      - version.properties
 steps:
   - script: |
       curl --location https://github.com/ethankhall/inc/releases/download/v0.1.6/inc-linux-0.1.6 -o ~/inc
