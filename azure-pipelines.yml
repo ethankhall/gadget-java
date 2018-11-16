@@ -29,16 +29,17 @@ steps:
 
   - task: CopyFiles@2
     inputs:
-      contents: build/webapp/gadget-release/**
+      sourceFolder: $(Build.ArtifactStagingDirectory)/build/webapp/gadget-release
       targetFolder: $(Build.ArtifactStagingDirectory)
 
   - task: PublishBuildArtifacts@1
     inputs:
       pathtoPublish: $(Build.ArtifactStagingDirectory)
-      artifactName: gadget.zip
+      artifactName: gadget-artifacts
 
   - script: |
       ~/release-manager github release-and-bump
+      ~/release-manager github gadget.zip=build/webapp/gadget-release/gadget.zip
       export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)"
       echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
       curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
