@@ -6,6 +6,7 @@ import com.google.common.cache.CacheBuilder
 import io.ehdev.gadget.model.AccountManagerPrincipal
 import io.ehdev.gadget.model.lazyLogger
 import org.apache.commons.lang3.StringUtils
+import org.springframework.core.annotation.Order
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.client.reactive.ClientHttpConnector
@@ -20,10 +21,8 @@ import java.security.Principal
 import java.time.Duration
 import java.util.concurrent.TimeUnit
 
-class JwtAuthenticatorFilter(
-    accountManagerHost: String,
-    private val om: ObjectMapper
-) : WebFilter {
+@Order(-10)
+class JwtAuthenticatorFilter(accountManagerHost: String, private val om: ObjectMapper) : WebFilter {
 
     private val log by lazyLogger()
 

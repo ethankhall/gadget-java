@@ -1,7 +1,10 @@
 exec:
   pull-deps:
-    commands: ./gradlew resolveDependencies
+    commands: 
+      - ./gradlew resolveDependencies
 
   build:
-    commands: ./gradlew build
+    commands: 
+      - docker-compose up -d
+      - ./gradlew build copyDistForRelease
     description: Run a normal build

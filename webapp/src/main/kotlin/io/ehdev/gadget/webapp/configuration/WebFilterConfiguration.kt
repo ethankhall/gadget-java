@@ -1,5 +1,8 @@
 package io.ehdev.gadget.webapp.configuration
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import io.ehdev.gadget.webapp.auth.JwtAuthenticatorFilter
+import io.ehdev.gadget.webapp.auth.LoggedInLoginFilter
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -10,6 +13,14 @@ import org.springframework.web.reactive.result.view.freemarker.FreeMarkerConfigu
 
 @Configuration
 open class WebFilterConfiguration : WebFluxConfigurer {
+
+    @Bean
+    open fun authFilter(applicationConfig: ApplicationConfig, objectMapper: ObjectMapper): JwtAuthenticatorFilter {
+        return JwtAuthenticatorFilter(applicationConfig.authHost, objectMapper)
+    }
+
+    @Bean
+    open fun loginFilter(environment: Environment) = LoggedInLoginFilter(environment)
 
     @Bean
     open fun freeMarkerConfig(applicationContext: ApplicationContext, environment: Environment): FreeMarkerConfigurer {

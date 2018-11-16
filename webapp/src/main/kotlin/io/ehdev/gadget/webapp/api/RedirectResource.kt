@@ -32,7 +32,7 @@ open class DefaultRedirectResource(private val redirectManager: RedirectManager)
     }
 
     override fun showRedirectJson(request: ServerRequest): Mono<ServerResponse> {
-        val requestPath = request.pathVariable("path")
+        val requestPath = request.pathVariable("path").trim('/')
         val redirectUrl = GadgetUtil.findRequestRedirect(redirectManager, requestPath)
         return if (redirectUrl == null) {
             ServerResponse.notFound().build()

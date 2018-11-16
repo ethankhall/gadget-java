@@ -3,8 +3,8 @@ kotlin = { version = "1.2.51", group = "org.jetbrains.kotlin" }
 jackson = { version = "2.9.6", group = "com.fasterxml.jackson.core" }
 jacksonData = { version = "2.9.6", group = "com.fasterxml.jackson.datatype" }
 jacksonModule = { version = "2.9.6", group = "com.fasterxml.jackson.module" }
-spring = { version = "5.0.8.RELEASE", group = "org.springframework" }
-springBoot = { version = "2.0.4.RELEASE", group = "org.springframework.boot" }
+spring = { version = "5.1.2.RELEASE", group = "org.springframework" }
+springBoot = { version = "2.1.0.RELEASE", group = "org.springframework.boot" }
 
 [libraries]
 common = [
@@ -33,7 +33,7 @@ spring = [
     'org.springframework:spring-tx',
     'org.springframework:spring-jdbc',
     'org.springframework:spring-context-support',
-    'io.projectreactor.ipc:reactor-netty:0.7.8.RELEASE',
+    'io.projectreactor.netty:reactor-netty:0.8.2.RELEASE',
     'org.springframework.boot:spring-boot',
     'org.springframework.boot:spring-boot-autoconfigure',
     'org.springframework.boot:spring-boot-starter',
@@ -43,7 +43,7 @@ spring = [
 ]
 
 httpClient = [
-    'io.projectreactor.ipc:reactor-netty:0.7.8.RELEASE',
+    'io.projectreactor.netty:reactor-netty:0.8.2.RELEASE',
     'io.mikael:urlbuilder:2.0.9'
 ]
 
@@ -52,7 +52,7 @@ database = [
     "com.zaxxer:HikariCP:3.2.0",
     "org.jooq:jooq:3.11.3",
     "org.jooq:jooq-meta:3.11.3",
-    "org.flywaydb:flyway-core:4.1.2"
+    "org.flywaydb:flyway-core:5.2.1"
 ]
 
 commonsLang = [

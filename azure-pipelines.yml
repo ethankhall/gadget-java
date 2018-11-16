@@ -4,13 +4,33 @@
 # https://aka.ms/yaml
 
 pool:
-  vmImage: 'Ubuntu 16.04'
+  vmImage: 'ubuntu-16.04'
 
+trigger: ['master']
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+  - script: |
+      curl --location https://github.com/ethankhall/inc/releases/download/v0.1.6/inc-linux-0.1.6 -o ~/inc
+      curl --location https://github.com/ethankhall/release-manager/releases/download/v0.1.9/release-manager-linux -o ~/release-manager
+      chmod +x ~/inc ~/release-manager
+      ~/inc exec build
+    displayName: 'Prepare the machine'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'JUnit'
+
+  - task: CopyFiles@2
+    inputs:
+      contents: build/webapp/gadget-release/
+      targetFolder: $(Build.ArtifactStagingDirectory)
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathtoPublish: $(Build.ArtifactStagingDirectory)
+      artifactName: gadget.zip
+
+  - script: |
+      GCR_PW="$(echo $GCP_SERVICE_TOKEN | base64 -d)"
+      ./gradlew jib -Djib.to.auth.password=$GCR_PW
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+

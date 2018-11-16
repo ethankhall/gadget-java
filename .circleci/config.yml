@@ -7,12 +7,15 @@ jobs:
       - image: openjdk:10-jdk
         environment:
           SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/gadget?verifyServerCertificate=false&useSSL=true
-      - image: mysql
-        environment:
-          MYSQL_ROOT_PASSWORD: password
-          MYSQL_DATABASE: gadget
 
     steps:
+      - run:
+          name: Install Docker Compose
+          command: |
+            curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
+            chmod +x ~/docker-compose
+            mv ~/docker-compose /usr/local/bin/docker-compose
+
       - run:
           name: Pull artifacts
           command: |
@@ -20,6 +23,7 @@ jobs:
             curl --location https://github.com/ethankhall/release-manager/releases/download/v0.1.9/release-manager-linux -o ~/release-manager
             chmod +x ~/inc ~/release-manager
 
+      - setup_remote_docker
       - checkout # check out source code to working directory
 
       - restore_cache:
@@ -56,7 +60,10 @@ jobs:
           paths:
             - docker-context
 
-      - run: ~/release-manager github release-and-bump
+      - run:
+          command: |
+            ~/release-manager github release-and-bump
+            ~/release-manager github gadget.zip=build/webapp/gadget-release/gadget.zip
 
   deploy:
     working_directory: ~/gadget # directory where steps will run
