@@ -25,10 +25,10 @@ open class RoutingConfiguration {
         gadgetJsonResource: GadgetJsonResource,
         gadgetHtmlResource: GadgetHtmlResource
     ): RouterFunction<ServerResponse> {
-        val serverPort = environment.getRequiredProperty("server.port").toInt()
+        val managementPort = environment.getProperty("management.server.port", "-2").toInt()
 
         return router {
-            RequestPredicate { it.uri().port == serverPort }.nest {
+            RequestPredicate { it.uri().port != managementPort }.nest {
                 accept(MediaType.TEXT_HTML).nest {
                     GET("/").invoke { it ->
                         val uri = it.uriBuilder().path("/gadget").build()

@@ -12,5 +12,4 @@ spring:
   flyway.table: flyway_schema_history
 
 server.port: 8081
-
 management.server.port: 9001
