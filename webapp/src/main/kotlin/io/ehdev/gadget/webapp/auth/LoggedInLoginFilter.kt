@@ -13,10 +13,11 @@ import java.security.Principal
 @Order(0)
 class LoggedInLoginFilter(environment: Environment) : WebFilter {
 
-    private val serverPort = environment.getRequiredProperty("server.port").toInt()
+    private val managementPort = environment.getProperty("management.server.port", "-2").toInt()
 
     override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
-        if (exchange.request.uri.port != serverPort) {
+
+        if (exchange.request.uri.port == managementPort) {
             return chain.filter(exchange)
         }
 
