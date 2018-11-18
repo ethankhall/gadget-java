@@ -4,6 +4,7 @@ import io.ehdev.gadget.database.manager.api.RedirectManager
 import io.ehdev.gadget.model.lazyLogger
 import io.ehdev.gadget.webapp.api.model.RedirectResponseModel
 import io.ehdev.gadget.webapp.api.model.SearchResponseModel
+import io.ehdev.gadget.webapp.configuration.findScheme
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import reactor.core.publisher.Mono
@@ -55,6 +56,7 @@ open class DefaultGadgetHtmlResource(private val redirectManager: RedirectManage
                                 .replacePath("/gadget/search")
                                 .replaceQuery("")
                                 .queryParam("searchString", name)
+                                .scheme(request.findScheme())
                                 .build()
                         ServerResponse.seeOther(destUri).build()
                     }

@@ -2,6 +2,7 @@ package io.ehdev.gadget.webapp.api
 
 import io.ehdev.gadget.database.manager.api.RedirectManager
 import io.ehdev.gadget.webapp.api.model.RedirectResponseModel
+import io.ehdev.gadget.webapp.configuration.findScheme
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import reactor.core.publisher.Mono
@@ -24,6 +25,7 @@ open class DefaultRedirectResource(private val redirectManager: RedirectManager)
                     .replacePath("/gadget/search")
                     .replaceQuery("")
                     .queryParam("searchString", requestPath)
+                    .scheme(request.findScheme())
                     .build()
             ServerResponse.temporaryRedirect(searchUri).build()
         } else {

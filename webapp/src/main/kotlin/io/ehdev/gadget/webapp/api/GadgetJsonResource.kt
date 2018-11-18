@@ -5,6 +5,7 @@ import io.ehdev.gadget.model.lazyLogger
 import io.ehdev.gadget.webapp.api.model.NewRedirect
 import io.ehdev.gadget.webapp.api.model.RedirectResponseModel
 import io.ehdev.gadget.webapp.api.model.SearchResponseModel
+import io.ehdev.gadget.webapp.configuration.findScheme
 import org.springframework.http.HttpStatus
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
@@ -30,7 +31,10 @@ open class DefaultGadgetJsonResource(private val redirectManager: RedirectManage
                                 redirectManager.setRedirect(redirectDefinition.alias,
                                         redirectDefinition.variables ?: emptyList(),
                                         redirectDefinition.destination, user.name)
-                                request.uriBuilder().replacePath("/gadget/redirect/${redirectDefinition.alias}").build()
+                                request.uriBuilder()
+                                        .replacePath("/gadget/redirect/${redirectDefinition.alias}")
+                                        .scheme(request.findScheme())
+                                        .build()
                             }.flatMap { ServerResponse.temporaryRedirect(it).build() }
                 }
             }
