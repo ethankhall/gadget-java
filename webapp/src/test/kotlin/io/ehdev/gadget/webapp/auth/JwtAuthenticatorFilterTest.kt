@@ -5,7 +5,7 @@ import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import com.github.tomakehurst.wiremock.stubbing.Scenario
-import io.ehdev.gadget.model.AccountManagerPrincipal
+import io.ehdev.gadget.model.GadgetPrincipal
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
@@ -25,7 +25,7 @@ internal class JwtAuthenticatorFilterTest {
         val baseUrl = server.url("/").toString()
 
         val authenticator = JwtAuthenticatorFilter(baseUrl, jacksonObjectMapper())
-        val authenticate = authenticator.resolveCredentials("fooo").block() as AccountManagerPrincipal
+        val authenticate = authenticator.resolveCredentials("fooo").block() as GadgetPrincipal.AccountManagerPrincipal
 
         assertNotNull(authenticate)
         assertEquals("foo@example.com", authenticate.name)
@@ -62,7 +62,7 @@ internal class JwtAuthenticatorFilterTest {
 
         val authenticator = JwtAuthenticatorFilter(baseUrl, jacksonObjectMapper())
         for (i in 0..1) {
-            val authenticate = authenticator.resolveCredentials("fooo").block() as AccountManagerPrincipal
+            val authenticate = authenticator.resolveCredentials("fooo").block() as GadgetPrincipal.AccountManagerPrincipal
 
             assertNotNull(authenticate)
             assertEquals("foo@example.com", authenticate.name)
@@ -85,7 +85,7 @@ internal class JwtAuthenticatorFilterTest {
 
         val authenticator = JwtAuthenticatorFilter(baseUrl, jacksonObjectMapper())
         for (i in 0..1) {
-            val authenticate = authenticator.resolveCredentials("fooo").block() as AccountManagerPrincipal
+            val authenticate = authenticator.resolveCredentials("fooo").block() as GadgetPrincipal.AccountManagerPrincipal
 
             assertNotNull(authenticate)
             assertEquals("foo@example.com", authenticate.name)

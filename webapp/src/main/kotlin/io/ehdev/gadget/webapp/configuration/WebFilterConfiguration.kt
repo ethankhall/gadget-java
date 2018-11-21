@@ -20,7 +20,7 @@ open class WebFilterConfiguration : WebFluxConfigurer {
     }
 
     @Bean
-    open fun loginFilter(environment: Environment) = LoggedInLoginFilter(environment)
+    open fun loginFilter(environment: Environment, applicationConfig: ApplicationConfig) = LoggedInLoginFilter(environment, applicationConfig)
 
     @Bean
     open fun freeMarkerConfig(applicationContext: ApplicationContext, environment: Environment): FreeMarkerConfigurer {
