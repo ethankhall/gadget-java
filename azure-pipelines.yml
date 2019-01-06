@@ -17,6 +17,7 @@ trigger:
       - version.properties
 steps:
   - script: |
+      set -e
       curl --location https://github.com/ethankhall/inc/releases/download/v0.1.6/inc-linux-0.1.6 -o ~/inc
       curl --location https://github.com/ethankhall/crom/releases/download/v0.1.4/crom-linux -o ~/crom
       chmod +x ~/inc ~/crom
