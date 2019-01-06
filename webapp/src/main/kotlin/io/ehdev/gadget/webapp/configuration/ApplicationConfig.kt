@@ -8,4 +8,17 @@ import org.springframework.stereotype.Component
 class ApplicationConfig {
     lateinit var authHost: String
     lateinit var defaultLogin: String
+    lateinit var primaryUriBase: String
+    lateinit var proxyDomains: Set<String>
+
+    companion object {
+        fun buildTestExample(): ApplicationConfig {
+            val applicationConfig = ApplicationConfig()
+            applicationConfig.authHost = "http://localhost:8080"
+            applicationConfig.defaultLogin = "http://localhost:8080"
+            applicationConfig.primaryUriBase = "http://localhost8081"
+            applicationConfig.proxyDomains = emptySet()
+            return applicationConfig
+        }
+    }
 }

@@ -2,9 +2,10 @@ package io.ehdev.gadget.webapp.api
 
 import io.ehdev.gadget.database.manager.api.RedirectManager
 import io.ehdev.gadget.webapp.api.model.RedirectResponseModel
-import io.ehdev.gadget.webapp.configuration.findScheme
+import io.ehdev.gadget.webapp.configuration.ApplicationConfig
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
+import org.springframework.web.util.UriComponentsBuilder
 import reactor.core.publisher.Mono
 import java.net.URI
 
@@ -14,20 +15,20 @@ interface RedirectResource {
     fun showRedirectJson(request: ServerRequest): Mono<ServerResponse>
 }
 
-open class DefaultRedirectResource(private val redirectManager: RedirectManager) : RedirectResource {
+open class DefaultRedirectResource(private val redirectManager: RedirectManager, config: ApplicationConfig) : RedirectResource {
+
+    private val primaryUriBase = config.primaryUriBase
 
     override fun doRedirect(request: ServerRequest): Mono<ServerResponse> {
         val requestPath = request.pathVariable("path").trim('/')
         val redirectUrl = GadgetUtil.findRequestRedirect(redirectManager, requestPath)
 
         return if (redirectUrl == null) {
-            val searchUri = request.uriBuilder()
+            val searchUri = UriComponentsBuilder.fromUriString(primaryUriBase)
                     .replacePath("/gadget/search")
-                    .replaceQuery("")
                     .queryParam("searchString", requestPath)
-                    .scheme(request.findScheme())
                     .build()
-            ServerResponse.temporaryRedirect(searchUri).build()
+            ServerResponse.temporaryRedirect(searchUri.toUri()).build()
         } else {
             ServerResponse.temporaryRedirect(URI.create(redirectUrl)).build()
         }

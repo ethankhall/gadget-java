@@ -2,6 +2,7 @@ package io.ehdev.gadget.webapp.api
 
 import io.ehdev.gadget.database.manager.api.RedirectManager
 import io.ehdev.gadget.model.RedirectContainer
+import io.ehdev.gadget.webapp.configuration.ApplicationConfig
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -100,6 +101,6 @@ internal class GadgetHtmlResourceTest {
 
     companion object {
         private val redirectManager: RedirectManager = Mockito.mock(RedirectManager::class.java)
-        private val redirectResource: RedirectResource = DefaultRedirectResource(redirectManager)
+        private val redirectResource: RedirectResource = DefaultRedirectResource(redirectManager, ApplicationConfig.buildTestExample())
     }
 }

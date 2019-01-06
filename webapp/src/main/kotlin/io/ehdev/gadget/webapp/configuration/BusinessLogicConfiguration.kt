@@ -26,7 +26,9 @@ open class BusinessLogicConfiguration {
     open fun redirectManager(dslContext: DSLContext, clock: Clock): RedirectManager = DefaultRedirectManager(dslContext, clock)
 
     @Bean
-    open fun redirectResource(redirectManager: RedirectManager): RedirectResource = DefaultRedirectResource(redirectManager)
+    open fun redirectResource(redirectManager: RedirectManager, applicationConfig: ApplicationConfig): RedirectResource {
+        return DefaultRedirectResource(redirectManager, applicationConfig)
+    }
 
     @Bean
     open fun gadgetJsonResource(redirectManager: RedirectManager): GadgetJsonResource = DefaultGadgetJsonResource(redirectManager)

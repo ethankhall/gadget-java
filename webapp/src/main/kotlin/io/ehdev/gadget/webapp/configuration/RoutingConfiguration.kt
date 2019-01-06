@@ -12,6 +12,7 @@ import org.springframework.web.reactive.function.server.RequestPredicate
 import org.springframework.web.reactive.function.server.RouterFunction
 import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.router
+import org.springframework.web.util.UriComponentsBuilder
 
 @Configuration
 @Import(BusinessLogicConfiguration::class, WebFilterConfiguration::class)
@@ -28,6 +29,18 @@ open class RoutingConfiguration {
         val managementPort = environment.getProperty("management.server.port", "-2").toInt()
 
         return router {
+            RequestPredicate { applicationConfig.proxyDomains.contains(it.uri().host) }.nest {
+                GET("/{*path}", redirectResource::doRedirect)
+
+                GET("/") {
+                    val uri = UriComponentsBuilder.fromUriString(applicationConfig.primaryUriBase)
+                            .path("/gadget")
+                            .build()
+                            .toUri()
+                    temporaryRedirect(uri).build()
+                }
+            }
+
             RequestPredicate { it.uri().port != managementPort }.nest {
                 accept(MediaType.TEXT_HTML).nest {
                     GET("/").invoke { it ->
