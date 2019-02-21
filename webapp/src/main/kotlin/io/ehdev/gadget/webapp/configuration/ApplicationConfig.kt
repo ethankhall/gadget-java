@@ -9,7 +9,7 @@ class ApplicationConfig {
     lateinit var authHost: String
     lateinit var defaultLogin: String
     lateinit var primaryUriBase: String
-    lateinit var proxyDomains: Set<String>
+    var proxyDomains: Set<String> = emptySet()
 
     companion object {
         fun buildTestExample(): ApplicationConfig {

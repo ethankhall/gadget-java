@@ -40,7 +40,7 @@ spring = [
     'org.springframework.boot:spring-boot-starter-aop',
     'org.springframework.boot:spring-boot-actuator',
     'org.springframework.boot:spring-boot-starter-actuator',
-    'io.micrometer:micrometer-registry-statsd:latest.release',
+    'io.micrometer:micrometer-registry-graphite:latest.release'
 ]
 
 httpClient = [
