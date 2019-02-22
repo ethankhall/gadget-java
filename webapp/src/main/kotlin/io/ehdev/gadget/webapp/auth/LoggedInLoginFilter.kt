@@ -34,8 +34,13 @@ class LoggedInLoginFilter(environment: Environment, private val applicationConfi
                         when (it) {
                             is GadgetPrincipal.AccountManagerPrincipal -> return@flatMap chain.filter(exchange)
                             else -> {
+                                val redirectTo = UriComponentsBuilder.fromUriString(applicationConfig.primaryUriBase)
+                                        .path(exchange.request.path.value())
+                                        .build()
+                                        .toUriString()
+
                                 val redirectUri = UriComponentsBuilder.fromUriString(applicationConfig.defaultLogin)
-                                        .queryParam("redirectTo", exchange.request.uri.toString())
+                                        .queryParam("redirectTo", redirectTo)
                                         .build()
 
                                 log.info("Redirect to {}", redirectUri)

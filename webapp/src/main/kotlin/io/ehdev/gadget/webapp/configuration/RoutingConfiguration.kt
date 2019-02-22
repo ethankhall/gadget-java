@@ -29,6 +29,10 @@ open class RoutingConfiguration {
         val managementPort = environment.getProperty("management.server.port", "-2").toInt()
 
         return router {
+            GET("/favicon.ico").invoke {
+                return@invoke ServerResponse.notFound().build()
+            }
+
             RequestPredicate { applicationConfig.proxyDomains.contains(it.uri().host) }.nest {
                 GET("/{*path}", redirectResource::doRedirect)
 
@@ -43,10 +47,11 @@ open class RoutingConfiguration {
 
             RequestPredicate { it.uri().port != managementPort }.nest {
                 accept(MediaType.TEXT_HTML).nest {
-                    GET("/").invoke { it ->
-                        val uri = it.uriBuilder().path("/gadget")
-                                .scheme(it.findScheme())
+                    GET("/").invoke {
+                        val uri = UriComponentsBuilder.fromUriString(applicationConfig.primaryUriBase)
+                                .path("/gadget")
                                 .build()
+                                .toUri()
                         return@invoke ServerResponse.temporaryRedirect(uri).build()
                     }
                     path("/gadget").nest {
