@@ -1,12 +1,13 @@
 package io.ehdev.gadget.webapp.api
 
 import io.ehdev.gadget.database.manager.api.RedirectManager
-import io.ehdev.gadget.model.lazyLogger
 import io.ehdev.gadget.webapp.api.model.RedirectResponseModel
 import io.ehdev.gadget.webapp.api.model.SearchResponseModel
+import io.ehdev.gadget.webapp.configuration.ApplicationConfig
 import io.ehdev.gadget.webapp.configuration.findScheme
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
+import org.springframework.web.util.UriComponentsBuilder
 import reactor.core.publisher.Mono
 import reactor.core.publisher.toMono
 
@@ -17,8 +18,8 @@ interface GadgetHtmlResource {
     fun updateRedirect(request: ServerRequest): Mono<ServerResponse>
 }
 
-open class DefaultGadgetHtmlResource(private val redirectManager: RedirectManager) : GadgetHtmlResource {
-    private val log by lazyLogger()
+open class DefaultGadgetHtmlResource(private val redirectManager: RedirectManager, config: ApplicationConfig) : GadgetHtmlResource {
+    private val primaryUriBase = config.primaryUriBase
 
     override fun searchFor(request: ServerRequest): Mono<ServerResponse> {
         val formData = SearchParameters(request)
@@ -52,12 +53,13 @@ open class DefaultGadgetHtmlResource(private val redirectManager: RedirectManage
                         val name = map.getFirst("name")!!
                         val destination = map.getFirst("destination")!!
                         redirectManager.setRedirect(name, destination, user.name)
-                        val destUri = request.uriBuilder()
+                        val destUri = UriComponentsBuilder.fromUriString(primaryUriBase)
                                 .replacePath("/gadget/search")
                                 .replaceQuery("")
                                 .queryParam("searchString", name)
                                 .scheme(request.findScheme())
                                 .build()
+                                .toUri()
                         ServerResponse.seeOther(destUri).build()
                     }
         }

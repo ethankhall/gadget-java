@@ -31,11 +31,13 @@ open class BusinessLogicConfiguration {
     }
 
     @Bean
-    open fun gadgetJsonResource(redirectManager: RedirectManager): GadgetJsonResource = DefaultGadgetJsonResource(redirectManager)
+    open fun gadgetJsonResource(redirectManager: RedirectManager, applicationConfig: ApplicationConfig): GadgetJsonResource {
+        return DefaultGadgetJsonResource(redirectManager, applicationConfig)
+    }
 
     @Bean
-    open fun gadgetHtmlResource(redirectManager: RedirectManager): GadgetHtmlResource {
-        return DefaultGadgetHtmlResource(redirectManager)
+    open fun gadgetHtmlResource(redirectManager: RedirectManager, applicationConfig: ApplicationConfig): GadgetHtmlResource {
+        return DefaultGadgetHtmlResource(redirectManager, applicationConfig)
     }
 
     @Bean

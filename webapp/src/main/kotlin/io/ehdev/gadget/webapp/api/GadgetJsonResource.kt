@@ -1,14 +1,15 @@
 package io.ehdev.gadget.webapp.api
 
 import io.ehdev.gadget.database.manager.api.RedirectManager
-import io.ehdev.gadget.model.lazyLogger
 import io.ehdev.gadget.webapp.api.model.NewRedirect
 import io.ehdev.gadget.webapp.api.model.RedirectResponseModel
 import io.ehdev.gadget.webapp.api.model.SearchResponseModel
+import io.ehdev.gadget.webapp.configuration.ApplicationConfig
 import io.ehdev.gadget.webapp.configuration.findScheme
 import org.springframework.http.HttpStatus
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
+import org.springframework.web.util.UriComponentsBuilder
 import reactor.core.publisher.Mono
 import reactor.core.publisher.toMono
 
@@ -17,9 +18,9 @@ interface GadgetJsonResource {
     fun searchRedirects(request: ServerRequest): Mono<ServerResponse>
 }
 
-open class DefaultGadgetJsonResource(private val redirectManager: RedirectManager) : GadgetJsonResource {
+open class DefaultGadgetJsonResource(private val redirectManager: RedirectManager, config: ApplicationConfig) : GadgetJsonResource {
 
-    private val log by lazyLogger()
+    private val primaryUriBase = config.primaryUriBase
 
     override fun createNewEndpoint(request: ServerRequest): Mono<ServerResponse> {
         return request.principal().flatMap { user ->
@@ -31,10 +32,11 @@ open class DefaultGadgetJsonResource(private val redirectManager: RedirectManage
                                 redirectManager.setRedirect(redirectDefinition.alias,
                                         redirectDefinition.variables ?: emptyList(),
                                         redirectDefinition.destination, user.name)
-                                request.uriBuilder()
+                                UriComponentsBuilder.fromUriString(primaryUriBase)
                                         .replacePath("/gadget/redirect/${redirectDefinition.alias}")
                                         .scheme(request.findScheme())
                                         .build()
+                                        .toUri()
                             }.flatMap { ServerResponse.temporaryRedirect(it).build() }
                 }
             }
