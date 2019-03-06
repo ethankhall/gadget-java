@@ -20,11 +20,11 @@ open class RoutingConfiguration {
 
     @Bean("mainRouter")
     open fun mainServer(
-            environment: Environment,
-            applicationConfig: ApplicationConfig,
-            redirectResource: RedirectResource,
-            jsonResource: GadgetJsonResource,
-            htmlResource: GadgetHtmlResource
+        environment: Environment,
+        applicationConfig: ApplicationConfig,
+        redirectResource: RedirectResource,
+        jsonResource: GadgetJsonResource,
+        htmlResource: GadgetHtmlResource
     ): RouterFunction<ServerResponse> {
         val managementPort = environment.getProperty("management.server.port", "-2").toInt()
 

@@ -47,7 +47,6 @@ open class DefaultGadgetJsonResource(private val redirectManager: RedirectManage
                                         .toUri()
 
                                 RedirectCreated(editUrl)
-
                             }.flatMap {
                                 ServerResponse.created(it.editUrl).body(Mono.just(it), RedirectCreated::class.java)
                             }
