@@ -101,6 +101,6 @@ internal class DefaultGadgetHtmlResourceTest {
 
     companion object {
         private val redirectManager: RedirectManager = Mockito.mock(RedirectManager::class.java)
-        private val redirectResource: RedirectResource = RedirectResource(redirectManager, ApplicationConfig.buildTestExample())
+        private val redirectResource: RedirectResource = DefaultRedirectResource(redirectManager, ApplicationConfig.buildTestExample())
     }
 }
