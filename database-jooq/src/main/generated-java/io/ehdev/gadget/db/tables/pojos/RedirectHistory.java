@@ -36,7 +36,7 @@ import javax.validation.constraints.Size;
 })
 public class RedirectHistory implements Serializable {
 
-    private static final long serialVersionUID = -208941676;
+    private static final long serialVersionUID = 45536828;
 
     private Long    redirectHistoryId;
     private String  alias;
@@ -127,7 +127,6 @@ public class RedirectHistory implements Serializable {
     }
 
     @Column(name = "deleted_at", nullable = false)
-    @NotNull
     public Instant getDeletedAt() {
         return this.deletedAt;
     }

@@ -37,7 +37,7 @@ import javax.validation.constraints.Size;
 })
 public class Redirect implements Serializable {
 
-    private static final long serialVersionUID = -1889088292;
+    private static final long serialVersionUID = -135442362;
 
     private Long    redirectId;
     private String  alias;
@@ -142,7 +142,6 @@ public class Redirect implements Serializable {
     }
 
     @Column(name = "created_at", nullable = false)
-    @NotNull
     public Instant getCreatedAt() {
         return this.createdAt;
     }

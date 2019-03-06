@@ -5,7 +5,7 @@ import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.hasSize
 import org.junit.jupiter.api.Test
 
-internal class NewRedirectTest {
+internal class RedirectDefinitionTest {
 
     @Test
     fun `alias doesn't have gadget`() {
@@ -74,7 +74,7 @@ internal class NewRedirectTest {
     private fun doValidation(alias: String = "hello-world",
                              variables: List<String> = emptyList(),
                              destination: String = "http://localhost"): List<String> {
-        val results = NewRedirect(alias, variables, destination).validateModel().validationError
+        val results = RedirectDefinition(alias, variables, destination).validateModel().validationError
         if (results.isNotEmpty()) {
             println("<=================================>")
             results.forEach { println("\t - $it") }

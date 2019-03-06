@@ -43,7 +43,7 @@ import org.jooq.impl.UpdatableRecordImpl;
 })
 public class RedirectHistoryRecord extends UpdatableRecordImpl<RedirectHistoryRecord> implements Record6<Long, String, String, String, String, Instant> {
 
-    private static final long serialVersionUID = 191047060;
+    private static final long serialVersionUID = -1321461220;
 
     /**
      * Setter for <code>gadget.redirect_history.redirect_history_id</code>.
@@ -140,7 +140,6 @@ public class RedirectHistoryRecord extends UpdatableRecordImpl<RedirectHistoryRe
      * Getter for <code>gadget.redirect_history.deleted_at</code>.
      */
     @Column(name = "deleted_at", nullable = false)
-    @NotNull
     public Instant getDeletedAt() {
         return (Instant) get(5);
     }

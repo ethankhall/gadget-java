@@ -43,7 +43,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class RedirectTable extends TableImpl<RedirectRecord> {
 
-    private static final long serialVersionUID = 481397319;
+    private static final long serialVersionUID = -1865315625;
 
     /**
      * The reference instance of <code>gadget.redirect</code>
@@ -91,7 +91,7 @@ public class RedirectTable extends TableImpl<RedirectRecord> {
     /**
      * The column <code>gadget.redirect.created_at</code>.
      */
-    public final TableField<RedirectRecord, Instant> CREATED_AT = createField("created_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "", new TimestampConverter());
+    public final TableField<RedirectRecord, Instant> CREATED_AT = createField("created_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP(6)", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "", new TimestampConverter());
 
     /**
      * Create a <code>gadget.redirect</code> table reference

@@ -7,7 +7,7 @@ internal class RedirectContainerTest {
 
     @Test
     fun `without variable`() {
-        val redirect = RedirectContainer("/foo", emptyList(), "http://bar")
+        val redirect = RedirectContainer("/foo", emptyList(), "http://bar", "")
 
         assertEquals("http://bar", redirect.buildRedirect("/foo"))
         assertEquals("http://bar%20flig", redirect.buildRedirect("/foo%20flig"))
@@ -15,7 +15,7 @@ internal class RedirectContainerTest {
 
     @Test
     fun `with variable`() {
-        val redirect = RedirectContainer("/foo", listOf("1"), "http://bar{/\$1/foo}")
+        val redirect = RedirectContainer("/foo", listOf("1"), "http://bar{/\$1/foo}", "")
 
         assertEquals("http://bar", redirect.buildRedirect("/foo"))
         assertEquals("http://bar/flig/foo", redirect.buildRedirect("/foo%20flig"))
@@ -23,7 +23,7 @@ internal class RedirectContainerTest {
 
     @Test
     fun `with variables`() {
-        val redirect = RedirectContainer("/foo", listOf("1", "hi"), "http://bar{/\$1/foo{/\$hi}}")
+        val redirect = RedirectContainer("/foo", listOf("1", "hi"), "http://bar{/\$1/foo{/\$hi}}", "")
 
         assertEquals("http://bar", redirect.buildRedirect("/foo"))
         assertEquals("http://bar/flig/foo", redirect.buildRedirect("/foo%20flig"))
@@ -32,7 +32,7 @@ internal class RedirectContainerTest {
 
     @Test
     fun `with extra variables`() {
-        val redirect = RedirectContainer("/foo", listOf("1"), "http://bar{/\$1/foo}")
+        val redirect = RedirectContainer("/foo", listOf("1"), "http://bar{/\$1/foo}", "")
 
         assertEquals("http://bar", redirect.buildRedirect("/foo"))
         assertEquals("http://bar/flig/foo", redirect.buildRedirect("/foo%20flig"))

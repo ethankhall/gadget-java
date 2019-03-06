@@ -108,7 +108,10 @@ class DefaultRedirectManager(private val context: DSLContext, private val clock:
 
     private fun convertToRedirectContainer(row: Record): RedirectContainer {
         val variables = (row.get(redirectTable.VARIABLES) ?: "").split(",")
-        return RedirectContainer(row.get(redirectTable.ALIAS), variables, row.get(redirectTable.DESTINATION))
+        val alias = row.get(redirectTable.ALIAS)
+        val destination = row.get(redirectTable.DESTINATION)
+        val user = row.get(redirectTable.USER) ?: "unknown"
+        return RedirectContainer(alias, variables, destination, user)
     }
 
     override fun removeRedirect(aliasPath: String): Boolean {
@@ -139,11 +142,10 @@ class DefaultRedirectManager(private val context: DSLContext, private val clock:
                 .where(whereClause)
                 .fetchAsync()
 
-        val foundAsync = context.select(redirectTable.ALIAS, redirectTable.VARIABLES, redirectTable.DESTINATION)
+        val foundAsync = context.select(redirectTable.ALIAS, redirectTable.VARIABLES, redirectTable.DESTINATION, redirectTable.USER)
                 .from(redirectTable)
                 .where(whereClause)
-                .limit(size)
-                .offset(offset)
+                .limit(offset, size)
                 .fetchAsync()
 
         return countAsync.thenCombineAsync(foundAsync) { count, found ->

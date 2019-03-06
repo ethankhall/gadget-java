@@ -44,7 +44,7 @@ import org.jooq.impl.UpdatableRecordImpl;
 })
 public class RedirectRecord extends UpdatableRecordImpl<RedirectRecord> implements Record7<Long, String, String, String, String, Long, Instant> {
 
-    private static final long serialVersionUID = -1321828978;
+    private static final long serialVersionUID = -1948160972;
 
     /**
      * Setter for <code>gadget.redirect.redirect_id</code>.
@@ -157,7 +157,6 @@ public class RedirectRecord extends UpdatableRecordImpl<RedirectRecord> implemen
      * Getter for <code>gadget.redirect.created_at</code>.
      */
     @Column(name = "created_at", nullable = false)
-    @NotNull
     public Instant getCreatedAt() {
         return (Instant) get(6);
     }

@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.reactive.function.server.ServerRequest
 import java.util.concurrent.CompletableFuture
 
-internal class GadgetHtmlResourceTest {
+internal class DefaultGadgetHtmlResourceTest {
 
     @BeforeEach
     fun setup() {
@@ -21,7 +21,7 @@ internal class GadgetHtmlResourceTest {
 
     @Test
     fun `normal get will work`() {
-        val redirect = CompletableFuture.supplyAsync { RedirectContainer("foo", listOf("1"), "http://bar.com/{1}") }
+        val redirect = CompletableFuture.supplyAsync { RedirectContainer("foo", listOf("1"), "http://bar.com/{1}", "") }
         Mockito.`when`(redirectManager.getRedirect("foo")).thenReturn(redirect)
         val request = Mockito.mock(ServerRequest::class.java)
         Mockito.`when`(request.pathVariable("path")).thenReturn("foo")
@@ -35,7 +35,7 @@ internal class GadgetHtmlResourceTest {
 
     @Test
     fun `parameter get will work`() {
-        val redirect = CompletableFuture.supplyAsync { RedirectContainer("foo", listOf("1"), "http://bar.com/{\$1}") }
+        val redirect = CompletableFuture.supplyAsync { RedirectContainer("foo", listOf("1"), "http://bar.com/{\$1}", "") }
         Mockito.`when`(redirectManager.getRedirect("foo")).thenReturn(redirect)
         val request = Mockito.mock(ServerRequest::class.java)
         Mockito.`when`(request.pathVariable("path")).thenReturn("foo blarg")
@@ -51,7 +51,7 @@ internal class GadgetHtmlResourceTest {
 
     @Test
     fun `parameter and extra get will work`() {
-        val redirect = CompletableFuture.supplyAsync { RedirectContainer("foo", listOf("1"), "http://bar.com/{\$1}") }
+        val redirect = CompletableFuture.supplyAsync { RedirectContainer("foo", listOf("1"), "http://bar.com/{\$1}", "") }
         Mockito.`when`(redirectManager.getRedirect("foo")).thenReturn(redirect)
         val request = Mockito.mock(ServerRequest::class.java)
         Mockito.`when`(request.pathVariable("path")).thenReturn("foo blah flig")
@@ -67,7 +67,7 @@ internal class GadgetHtmlResourceTest {
 
     @Test
     fun `subresource get will work`() {
-        val redirect = CompletableFuture.supplyAsync { RedirectContainer("foo/bar", listOf(), "http://bar.com/") }
+        val redirect = CompletableFuture.supplyAsync { RedirectContainer("foo/bar", listOf(), "http://bar.com/", "") }
         Mockito.`when`(redirectManager.getRedirect("foo/bar")).thenReturn(redirect)
         Mockito.`when`(redirectManager.getRedirect("foo")).thenReturn(CompletableFuture.supplyAsync { null })
         val request = Mockito.mock(ServerRequest::class.java)
@@ -84,7 +84,7 @@ internal class GadgetHtmlResourceTest {
 
     @Test
     fun `subresource with variable and extra get will work`() {
-        val redirect = CompletableFuture.supplyAsync { RedirectContainer("foo/bar", listOf("1"), "http://bar.com/{\$1}") }
+        val redirect = CompletableFuture.supplyAsync { RedirectContainer("foo/bar", listOf("1"), "http://bar.com/{\$1}", "") }
         Mockito.`when`(redirectManager.getRedirect("foo/bar")).thenReturn(redirect)
         val request = Mockito.mock(ServerRequest::class.java)
         Mockito.`when`(request.pathVariable("path")).thenReturn("foo/bar blig flarg")
