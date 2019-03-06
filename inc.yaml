@@ -12,3 +12,8 @@ exec:
   package:
     commands:
       - ./gradlew copyDistForRelease
+  
+  local-deploy:
+    commands:
+      - ./gradlew :webapp:installDist
+      - build/webapp/install/webapp/bin/webapp

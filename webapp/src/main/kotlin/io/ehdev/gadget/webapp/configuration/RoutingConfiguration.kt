@@ -20,11 +20,11 @@ open class RoutingConfiguration {
 
     @Bean("mainRouter")
     open fun mainServer(
-        environment: Environment,
-        applicationConfig: ApplicationConfig,
-        redirectResource: RedirectResource,
-        gadgetJsonResource: GadgetJsonResource,
-        gadgetHtmlResource: GadgetHtmlResource
+            environment: Environment,
+            applicationConfig: ApplicationConfig,
+            redirectResource: RedirectResource,
+            jsonResource: GadgetJsonResource,
+            htmlResource: GadgetHtmlResource
     ): RouterFunction<ServerResponse> {
         val managementPort = environment.getProperty("management.server.port", "-2").toInt()
 
@@ -55,22 +55,24 @@ open class RoutingConfiguration {
                         return@invoke ServerResponse.temporaryRedirect(uri).build()
                     }
                     path("/gadget").nest {
-                        GET("", gadgetHtmlResource::rootPage)
-                        GET("/resource/{path}")
-                        GET("/search", gadgetHtmlResource::searchFor)
-                        GET("/new", gadgetHtmlResource::displayUpdatePage)
-                        POST("/new", gadgetHtmlResource::updateRedirect)
+                        GET("", htmlResource::getRootPage)
+                        GET("/edit", htmlResource::getEditPathPage)
+                        GET("/search", htmlResource::getSearchPage)
+                        GET("/new", htmlResource::getNewPage)
+                        GET("/delete", htmlResource::getDeletePathPage)
                     }
 
                     GET("/{*path}", redirectResource::doRedirect)
                 }
                 accept(MediaType.APPLICATION_JSON).nest {
                     path("/gadget").nest {
-                        POST("/", gadgetJsonResource::createNewEndpoint)
-                        GET("/resource/{*path}", redirectResource::showRedirectJson)
-                        GET("/search", gadgetJsonResource::searchRedirects)
+                        POST("/resource", jsonResource::createNewEndpoint)
+                        GET("/resource/{*path}") { jsonResource.showRedirectJson(it, true) }
+                        DELETE("/resource/{*path}", jsonResource::deleteRedirect)
+                        PUT("/resource/{*path}", jsonResource::updateRedirect)
+                        GET("/search", jsonResource::searchRedirects)
                     }
-                    GET("/{*path}", redirectResource::showRedirectJson)
+                    GET("/{*path}") { jsonResource.showRedirectJson(it, false) }
                 }
             }
         }

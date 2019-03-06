@@ -2,7 +2,7 @@ package io.ehdev.gadget.model
 
 import org.apache.commons.codec.net.URLCodec
 
-class RedirectContainer(val aliasRoot: String, private val variableNames: List<String>, val redirect: String) {
+class RedirectContainer(val aliasRoot: String, private val variableNames: List<String>, val redirect: String, val createdBy: String) {
 
     private val codec = URLCodec()
 

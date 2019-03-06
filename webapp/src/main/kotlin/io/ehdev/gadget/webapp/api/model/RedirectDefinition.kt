@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.net.MalformedURLException
 
-class NewRedirect @JsonCreator constructor(
+class RedirectDefinition @JsonCreator constructor(
     @JsonProperty("alias", required = true) val alias: String,
     @JsonProperty("variables", required = false) val variables: List<String>?,
     @JsonProperty("destination", required = true) val destination: String
