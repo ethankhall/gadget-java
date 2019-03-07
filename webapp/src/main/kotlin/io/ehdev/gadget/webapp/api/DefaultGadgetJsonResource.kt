@@ -8,6 +8,7 @@ import io.ehdev.gadget.webapp.api.model.RedirectResponseModel
 import io.ehdev.gadget.webapp.api.model.SearchResponseModel
 import io.ehdev.gadget.webapp.api.model.SearchResponseModelResult
 import io.ehdev.gadget.webapp.configuration.ApplicationConfig
+import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpStatus
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
@@ -15,6 +16,7 @@ import org.springframework.web.reactive.function.server.body
 import org.springframework.web.util.UriComponentsBuilder
 import reactor.core.publisher.Mono
 import reactor.core.publisher.toMono
+import java.lang.RuntimeException
 import java.net.URI
 
 interface GadgetJsonResource {
@@ -37,18 +39,25 @@ open class DefaultGadgetJsonResource(private val redirectManager: RedirectManage
                 null -> ServerResponse.status(HttpStatus.UNAUTHORIZED).build()
                 else -> {
                     request.bodyToMono(RedirectDefinition::class.java)
-                            .map { redirectDefinition ->
-                                redirectManager.setRedirect(redirectDefinition.alias,
-                                        redirectDefinition.variables ?: emptyList(),
-                                        redirectDefinition.destination, user.name)
-                                val editUrl = UriComponentsBuilder.fromUriString(primaryUriBase)
-                                        .replacePath("/gadget/resource/${redirectDefinition.alias}")
-                                        .build()
-                                        .toUri()
+                            .flatMap { redirectDefinition ->
+                                if (redirectDefinition.alias.length < 2) {
+                                    val map = mapOf("error" to "Alias must be at least 2 characters long")
+                                    val parameterizedType = object : ParameterizedTypeReference<Map<String, String>>() {}
 
-                                RedirectCreated(editUrl)
-                            }.flatMap {
-                                ServerResponse.created(it.editUrl).body(Mono.just(it), RedirectCreated::class.java)
+                                    ServerResponse.status(HttpStatus.NOT_ACCEPTABLE)
+                                            .body(Mono.just(map), parameterizedType)
+                                } else {
+                                    redirectManager.setRedirect(redirectDefinition.alias,
+                                            redirectDefinition.variables ?: emptyList(),
+                                            redirectDefinition.destination, user.name)
+                                    val editUrl = UriComponentsBuilder.fromUriString(primaryUriBase)
+                                            .replacePath("/gadget/resource/${redirectDefinition.alias}")
+                                            .build()
+                                            .toUri()
+
+                                    val redirect = RedirectCreated(editUrl)
+                                    ServerResponse.created(redirect.editUrl).body(Mono.just(redirect), RedirectCreated::class.java)
+                                }
                             }
                 }
             }

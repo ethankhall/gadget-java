@@ -55,8 +55,8 @@
                 <div style="display:inline-block">
                     <form class="form-inline">
                         <div class="form-group mx-sm-3 mb-2">
-                            <input class="form-control" placeholder="Source" type="text" name="name"
-                                   value="${name}" id="redirectName">
+                            <input class="form-control" placeholder="Alias" type="text" name="name"
+                                   value="${name}" id="redirectName" disabled="disabled">
                         </div>
                         <div class="form-group mx-sm-3 mb-2">
                             <input class="form-control" placeholder="Destination" name="destination"

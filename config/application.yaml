@@ -15,4 +15,5 @@ spring:
 
 server.port: 8081
 management.server.port: 9001
+management.metrics.export.graphite.enabled: false
 #server.error.whitelabel.enabled: false
