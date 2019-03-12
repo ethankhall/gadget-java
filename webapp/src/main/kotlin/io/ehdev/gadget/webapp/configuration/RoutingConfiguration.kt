@@ -36,7 +36,7 @@ open class RoutingConfiguration {
             RequestPredicate { applicationConfig.proxyDomains.contains(it.uri().host) }.nest {
                 GET("/{*path}", redirectResource::doRedirect)
 
-                GET("/") {
+                GET("/").invoke {
                     val uri = UriComponentsBuilder.fromUriString(applicationConfig.primaryUriBase)
                             .path("/gadget")
                             .build()
