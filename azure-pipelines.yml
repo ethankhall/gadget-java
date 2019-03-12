@@ -18,11 +18,12 @@ trigger:
 steps:
   - script: |
       set -e
-      curl --location https://github.com/ethankhall/inc/releases/download/v0.1.6/inc-linux-0.1.6 -o ~/inc
-      curl --location https://github.com/ethankhall/crom/releases/download/v0.1.5/crom-linux -o ~/crom
-      chmod +x ~/inc ~/crom
-      ~/crom update-version --pre-release release
-      ~/inc exec build
+      mkdir ~/bin || true
+      curl --location https://github.com/ethankhall/inc/releases/download/v0.1.6/inc-linux-0.1.6 -o ~/bin/inc
+      curl --location https://github.com/ethankhall/crom/releases/download/v0.1.13/crom-linux-musl.tar.gz | tar -xvz  -C ~/bin
+      chmod +x ~/bin/inc ~/bin/crom
+      ~/bin/crom update-version --pre-release release
+      ~/bin/inc exec build
     displayName: 'Prepare the machine'
 
   - task: PublishTestResults@2
@@ -41,7 +42,7 @@ steps:
 
   - script: |
       set -e
-      ~/crom tag-version --source local,github --ignore-changes
+      ~/bin/crom tag-version --source local,github --ignore-changes
       export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)"
       echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
       curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
