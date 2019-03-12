@@ -19,18 +19,19 @@ open class DefaultRedirectResource(private val redirectManager: RedirectManager,
 
     override fun doRedirect(request: ServerRequest): Mono<ServerResponse> {
         val requestPath = request.pathVariable("path").trim('/')
+        val searchUri = UriComponentsBuilder.fromUriString(primaryUriBase)
+                .replacePath("/gadget/search")
+                .queryParam(ALIAS, requestPath)
+                .build()
+
         return Mono.fromCompletionStage(GadgetUtil.findRequestRedirect(redirectManager, requestPath))
                 .flatMap {
             val redirectUrl = it?.buildRedirect(requestPath)
             if (redirectUrl == null) {
-                val searchUri = UriComponentsBuilder.fromUriString(primaryUriBase)
-                        .replacePath("/gadget/search")
-                        .queryParam(ALIAS, requestPath)
-                        .build()
                 ServerResponse.temporaryRedirect(searchUri.toUri()).build()
             } else {
                 ServerResponse.temporaryRedirect(URI.create(redirectUrl)).build()
             }
-        }
+        }.switchIfEmpty(ServerResponse.temporaryRedirect(searchUri.toUri()).build())
     }
 }
