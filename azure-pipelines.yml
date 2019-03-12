@@ -20,7 +20,7 @@ steps:
       set -e
       mkdir ~/bin || true
       curl --location https://github.com/ethankhall/inc/releases/download/v0.1.6/inc-linux-0.1.6 -o ~/bin/inc
-      curl --location https://github.com/ethankhall/crom/releases/download/v0.1.13/crom-linux-musl.tar.gz | tar -xvz  -C ~/bin
+      curl --location https://github.com/ethankhall/crom/releases/download/v0.1.14/crom-linux-musl.tar.gz | tar -xvz  -C ~/bin
       chmod +x ~/bin/inc ~/bin/crom
       ~/bin/crom update-version --pre-release release
       ~/bin/inc exec build
