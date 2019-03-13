@@ -6,7 +6,6 @@ import java.net.MalformedURLException
 
 class RedirectDefinition @JsonCreator constructor(
     @JsonProperty("alias", required = true) val alias: String,
-    @JsonProperty("variables", required = false) val variables: List<String>?,
     @JsonProperty("destination", required = true) val destination: String
 ) {
 
@@ -14,10 +13,8 @@ class RedirectDefinition @JsonCreator constructor(
         val validation = ModelValidationModel()
         validateAliasDoesNotHaveGadget(validation)
         validateAliasInRange(validation)
-        validateDestinationInCorrectFormat(validation)
         validateDestinationInRange(validation)
         validateDestinationValidUrl(validation)
-        validateVariableListToLong(validation)
         return validation
     }
 
@@ -41,12 +38,6 @@ class RedirectDefinition @JsonCreator constructor(
         }
     }
 
-    private fun validateVariableListToLong(validation: ModelValidationModel) {
-        if ((variables ?: emptyList()).joinToString(",").length > 128) {
-            validation.addValidationFailure("to many variables, joined list can only be 128 characters long")
-        }
-    }
-
     private fun validateDestinationValidUrl(validation: ModelValidationModel) {
         try {
             if (!destination.contains("://")) {
@@ -57,18 +48,5 @@ class RedirectDefinition @JsonCreator constructor(
         } catch (e: MalformedURLException) {
             validation.addValidationFailure("destination is not a valid url")
         }
-    }
-
-    private fun validateDestinationInCorrectFormat(validation: ModelValidationModel) {
-        val matches = variableMatcher.findAll(destination).map { it.value.drop(1) }
-        for (match in matches) {
-            if (match !in (variables ?: emptyList())) {
-                return validation.addValidationFailure("destination has unknown variables")
-            }
-        }
-    }
-
-    companion object {
-        private val variableMatcher = Regex("\$[a-zA-Z0-9_-]+")
     }
 }

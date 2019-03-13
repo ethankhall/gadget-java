@@ -46,7 +46,6 @@ open class DefaultGadgetJsonResource(private val redirectManager: RedirectManage
                                             .body(Mono.just(map), parameterizedType)
                                 } else {
                                     redirectManager.setRedirect(redirectDefinition.alias,
-                                            redirectDefinition.variables ?: emptyList(),
                                             redirectDefinition.destination, user.name)
                                     val editUrl = UriComponentsBuilder.fromUriString(primaryUriBase)
                                             .replacePath("/gadget/resource/${redirectDefinition.alias}")
@@ -101,7 +100,6 @@ open class DefaultGadgetJsonResource(private val redirectManager: RedirectManage
                             .flatMap { redirectDefinition ->
                                 if (redirectManager.getRedirect(redirectDefinition.alias).toCompletableFuture().get() != null) {
                                     redirectManager.setRedirect(redirectDefinition.alias,
-                                            redirectDefinition.variables ?: emptyList(),
                                             redirectDefinition.destination, user.name)
                                     val redirect = UriComponentsBuilder.fromUriString(primaryUriBase)
                                             .replacePath("/gadget/redirect/${redirectDefinition.alias}")

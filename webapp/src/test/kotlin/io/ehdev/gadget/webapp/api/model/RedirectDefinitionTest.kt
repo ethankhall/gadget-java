@@ -10,7 +10,7 @@ internal class RedirectDefinitionTest {
     @Test
     fun `alias doesn't have gadget`() {
         control {
-            doValidation("aaaa", emptyList(), "http://localhost")
+            doValidation("aaaa", "http://localhost")
         }
 
         validate {
@@ -72,9 +72,8 @@ internal class RedirectDefinitionTest {
     private fun validate(body: () -> Unit) = body.invoke()
 
     private fun doValidation(alias: String = "hello-world",
-                             variables: List<String> = emptyList(),
                              destination: String = "http://localhost"): List<String> {
-        val results = RedirectDefinition(alias, variables, destination).validateModel().validationError
+        val results = RedirectDefinition(alias, destination).validateModel().validationError
         if (results.isNotEmpty()) {
             println("<=================================>")
             results.forEach { println("\t - $it") }
