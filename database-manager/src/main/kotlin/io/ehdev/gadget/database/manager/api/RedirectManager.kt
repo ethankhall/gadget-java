@@ -5,8 +5,6 @@ import java.util.concurrent.CompletionStage
 
 interface RedirectManager {
 
-    fun setRedirect(aliasPath: String, variables: List<String>, destination: String, userName: String)
-
     fun setRedirect(aliasPath: String, destination: String, userName: String)
 
     fun getRedirect(aliasPath: String): CompletionStage<RedirectContainer?>

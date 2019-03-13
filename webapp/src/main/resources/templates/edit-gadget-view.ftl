@@ -39,7 +39,7 @@
             success: function (result) {
                 window.location.href = "/gadget/search?name=" + redirectName;
             },
-            data: body,
+            data: JSON.stringify(body),
             contentType: 'application/json'
         });
     }
@@ -62,8 +62,8 @@
                             <input class="form-control" placeholder="Destination" name="destination"
                                    type="text" value="${destination}" id="redirectValue">
                         </div>
-                        <button class="btn btn-outline-success my-2 my-sm-0" onclick="updateRedirect()">Update</button>
-                        <button class="btn btn-outline-danger my-2 my-sm-0" onclick="deleteRedirect()">Delete</button>
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="button" onclick="updateRedirect()">Update</button>
+                        <button class="btn btn-outline-danger my-2 my-sm-0" type="button" onclick="deleteRedirect()">Delete</button>
                     </form>
                 </div>
             </div>

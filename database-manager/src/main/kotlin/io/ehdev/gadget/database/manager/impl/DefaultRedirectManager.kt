@@ -24,7 +24,7 @@ class DefaultRedirectManager(private val context: DSLContext, private val clock:
         setRedirect(aliasPath, variables, destination, userName)
     }
 
-    override fun setRedirect(aliasPath: String, variables: List<String>, destination: String, userName: String) {
+    private fun setRedirect(aliasPath: String, variables: List<String>, destination: String, userName: String) {
         context.transactionWithDsl { dsl ->
             val existingRow = dsl.select(redirectTable.REDIRECT_ID, redirectTable.UPDATE_COUNT)
                     .from(redirectTable)
