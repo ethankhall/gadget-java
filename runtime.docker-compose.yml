@@ -1,0 +1,23 @@
+version: '3.1'
+
+services:
+  db:
+    image: mysql:5.7
+    command: --default-authentication-plugin=mysql_native_password
+    restart: on-failure
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: gadget
+    healthcheck:
+      test:  mysql --user=root --password=password -e 'select 1'
+  gadget:
+    image: gcr.io/account-manager-216313/gadget-app:v0.2.24
+    ports:
+      - 8081:8081
+    links:
+      - db
+    depends_on:
+      - db
+    restart: on-failure
+    environment:
+      SPRING_APPLICATION_JSON: '{"gadget":{"disableAuth":true,"authHost":"unused","defaultLogin":"unused","primaryUriBase":"http://localhost:8081","proxyDomains":[]},"spring":{"datasource":{"type":"com.zaxxer.hikari.HikariDataSource","url":"jdbc:mysql://db:3306/gadget?verifyServerCertificate=false&useSSL=true","driver-class-name":"com.mysql.cj.jdbc.Driver","username":"root","password":"password"},"flyway.table":"flyway_schema_history"},"server.port":8081,"management.server.port":9001,"management.metrics.export.graphite.enabled":false}'
