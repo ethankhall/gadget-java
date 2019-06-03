@@ -6,6 +6,7 @@ import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import com.github.tomakehurst.wiremock.stubbing.Scenario
 import io.ehdev.gadget.model.GadgetPrincipal
+import io.ehdev.gadget.webapp.configuration.ApplicationConfig
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
@@ -24,7 +25,11 @@ internal class JwtAuthenticatorFilterTest {
         server.start()
         val baseUrl = server.url("/").toString()
 
-        val authenticator = JwtAuthenticatorFilter(baseUrl, jacksonObjectMapper())
+        val config = ApplicationConfig()
+        config.authHost = baseUrl
+        config.disableAuth = false
+
+        val authenticator = JwtAuthenticatorFilter(config, jacksonObjectMapper())
         val authenticate = authenticator.resolveCredentials("fooo").block() as GadgetPrincipal.AccountManagerPrincipal
 
         assertNotNull(authenticate)
@@ -60,7 +65,11 @@ internal class JwtAuthenticatorFilterTest {
 
         val baseUrl = server.url("/").toString()
 
-        val authenticator = JwtAuthenticatorFilter(baseUrl, jacksonObjectMapper())
+        val config = ApplicationConfig()
+        config.authHost = baseUrl
+        config.disableAuth = false
+
+        val authenticator = JwtAuthenticatorFilter(config, jacksonObjectMapper())
         for (i in 0..1) {
             val authenticate = authenticator.resolveCredentials("fooo").block() as GadgetPrincipal.AccountManagerPrincipal
 
@@ -83,7 +92,11 @@ internal class JwtAuthenticatorFilterTest {
 
         val baseUrl = server.url("/").toString()
 
-        val authenticator = JwtAuthenticatorFilter(baseUrl, jacksonObjectMapper())
+        val config = ApplicationConfig()
+        config.authHost = baseUrl
+        config.disableAuth = false
+
+        val authenticator = JwtAuthenticatorFilter(config, jacksonObjectMapper())
         for (i in 0..1) {
             val authenticate = authenticator.resolveCredentials("fooo").block() as GadgetPrincipal.AccountManagerPrincipal
 

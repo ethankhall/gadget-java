@@ -5,6 +5,7 @@ import com.google.common.cache.Cache
 import com.google.common.cache.CacheBuilder
 import io.ehdev.gadget.model.GadgetPrincipal
 import io.ehdev.gadget.model.lazyLogger
+import io.ehdev.gadget.webapp.configuration.ApplicationConfig
 import org.apache.commons.lang3.StringUtils
 import org.springframework.core.annotation.Order
 import org.springframework.http.MediaType
@@ -18,10 +19,14 @@ import org.springframework.web.server.WebFilterChain
 import reactor.core.publisher.Mono
 import java.security.Principal
 import java.time.Duration
+import java.util.UUID
 import java.util.concurrent.TimeUnit
 
 @Order(-10)
-class JwtAuthenticatorFilter(accountManagerHost: String, private val om: ObjectMapper) : WebFilter {
+class JwtAuthenticatorFilter(applicationConfig: ApplicationConfig, private val om: ObjectMapper) : WebFilter {
+
+    private val accountManagerHost = applicationConfig.authHost
+    private val disableAuth = applicationConfig.disableAuth
 
     private val log by lazyLogger()
 
@@ -37,6 +42,13 @@ class JwtAuthenticatorFilter(accountManagerHost: String, private val om: ObjectM
             .build()
 
     override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
+        if (disableAuth) {
+            val forcedUser: Mono<Principal> = Mono.just(
+                    GadgetPrincipal.AccountManagerPrincipal("disabled:${UUID.randomUUID()}", "Auth Disabled"))
+            val newExchange = exchange.mutate().principal(forcedUser).build()
+            return chain.filter(newExchange)
+        }
+
         val credentials = findAuthToken(exchange)
 
         val principal: Mono<Principal> = if (null != credentials) {

@@ -16,7 +16,7 @@ open class WebFilterConfiguration : WebFluxConfigurer {
 
     @Bean
     open fun authFilter(applicationConfig: ApplicationConfig, objectMapper: ObjectMapper): JwtAuthenticatorFilter {
-        return JwtAuthenticatorFilter(applicationConfig.authHost, objectMapper)
+        return JwtAuthenticatorFilter(applicationConfig, objectMapper)
     }
 
     @Bean

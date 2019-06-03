@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component
 @Component
 @ConfigurationProperties("gadget")
 class ApplicationConfig {
+    var disableAuth: Boolean = false
     lateinit var authHost: String
     lateinit var defaultLogin: String
     lateinit var primaryUriBase: String

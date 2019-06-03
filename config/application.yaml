@@ -1,4 +1,5 @@
 gadget:
+  disableAuth: false
   authHost: http://localhost:8080
   defaultLogin: http://localhost:8080/oauth/github
   primaryUriBase: http://localhost:8081
